@@ -1,8 +1,9 @@
-Clear the encoders
-Start moving forwards
-Start moving backwards
-stop moving
-turn right
-turn left
-drive forwards for # inches
-drive backwards for # inches
+Clear the encoders		clearEncoders
+Start moving forwards		startForward
+Start moving backwards		startBackward
+stop moving			stopDrive
+turn right			turnRight
+turn left			turnLeft
+drive forwards for # inches	moveForwardInches
+drive backwards for # inches	moveBackwardInches
+
