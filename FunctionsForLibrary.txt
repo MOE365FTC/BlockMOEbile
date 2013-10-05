@@ -1,0 +1,8 @@
+Clear the encoders
+Start moving forwards
+Start moving backwards
+stop moving
+turn right
+turn left
+drive forwards for # inches
+drive backwards for # inches
