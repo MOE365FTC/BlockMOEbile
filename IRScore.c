@@ -1,7 +1,9 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S2,     gyro,           sensorAnalogInactive)
 #pragma config(Sensor, S3,     IR,             sensorI2CCustom)
-#pragma config(Motor,  mtr_S1_C1_1,     leftDrive,     tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C1_2,     rightDrive,    tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_1,     leftDrive,     tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S1_C1_2,     rightDrive,    tmotorTetrix, openLoop, encoder)
 #pragma config(Servo,  srvo_S1_C2_1,    servo1,               tServoNone)
 #pragma config(Servo,  srvo_S1_C2_2,    servo2,               tServoNone)
 #pragma config(Servo,  srvo_S1_C2_3,    servo3,               tServoNone)
@@ -16,29 +18,31 @@
 #include "libraries/pidturn.h"
 #include "libraries/library.h"
 
+GYRO g_Gyro;
+PIDTURN g_PidTurn;
 
+const int MIN_TURN_POWER = 22;
+const float TURN_KP = 0.85;//Default was 0.9
+const float TURN_TOLERANCE = 0.3;
 
-void initializeRobot()
-{
-  // Place code here to sinitialize servos to starting positions.
-  // Sensors are automatically configured and setup by ROBOTC. They may need a brief time to stabilize.
-
-  return;
+void initializeRobot(){
+	GyroInit(g_Gyro, gyro, 0);
+	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
+	return;
 }
-
 
 task main()
 {
-  initializeRobot();
+	initializeRobot();
 
-  waitForStart(); // Wait for the beginning of autonomous phase.
-//Align against bottom wall, with left wheels on left edge of third tile (6ft from right wall).
-  moveForwardInches(75, 5);
-  turn(-45);
-  	while(HTIRS2readACDir(IR) != 5){
+	waitForStart(); // Wait for the beginning of autonomous phase.
+	//Align against bottom wall, with right edge of right wheels on left edge of third tile (6ft from right wall).
+	moveForwardInches(75, 1, true, LEFTENCODER);
+	turn(g_PidTurn,-45);
+	while(HTIRS2readACDir(IR) != 5){
 		startForward(50);
 	}
 	stopDrive();
-  while (true)
-  {}
+	while (true)
+	{}
 }

@@ -1,11 +1,12 @@
 #pragma systemFile
 
-
+#define LEFTENCODER false
+#define RIGHTENCODER true
 
 //conversion of encoder tics to inches
 //114.6 motor tics = 1 inch
 
-const int encoderTicsPerInch = 114.6;
+const float encoderTicsPerInch = 114.6;
 
 //list of prototypes
 void clearEncoders();
@@ -38,22 +39,37 @@ void stopDrive(){
 
 // Turning code located in pidturn.h
 
-void moveForwardInches(int speed, int inches){
+void moveForwardInches(int speed, int inches, bool isReversed = false, bool encoder = RIGHTENCODER){
 	clearEncoders();
+	int ticsToMove = encoderTicsPerInch * inches;
+	int encoderPosition = 0;
 
-	while(nMotorEncoder[rightDrive] <= encoderTicsPerInch*inches){
+	if(encoder == RIGHTENCODER) while(encoderPosition<= ticsToMove){
+		encoderPosition = nMotorEncoder[rightDrive];
+		if(isReversed) encoderPosition = -encoderPosition;
 		startForward(speed);
 	}
-}
-
-void moveBackwardInches(int speed, int inches){
-	clearEncoders();
-
-	while(nMotorEncoder[rightDrive] <= encoderTicsPerInch*inches){
-
-		startBackward(inches);
+	else while(encoderPosition<= ticsToMove){
+		encoderPosition = nMotorEncoder[leftDrive];
+		if(isReversed) encoderPosition = -encoderPosition;
+		startForward(speed);
 	}
 
+}
+
+void moveBackwardInches(int speed, int inches, bool isReversed = false, bool encoder = RIGHTENCODER){
+	clearEncoders();
+
+	if(encoder == RIGHTENCODER) while(encoderPosition<= ticsToMove){
+		encoderPosition = nMotorEncoder[rightDrive];
+		if(isReversed) encoderPosition = -encoderPosition;
+		startBackward(speed);
+	}
+	else while(encoderPosition<= ticsToMove){
+		encoderPosition = nMotorEncoder[leftDrive];
+		if(isReversed) encoderPosition = -encoderPosition;
+		startBackward(speed);
+	}
 }
 
 
