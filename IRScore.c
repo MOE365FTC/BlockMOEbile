@@ -12,9 +12,9 @@
 
 #include "JoystickDriver.c"  //Include file to "handle" the Bluetooth messages.
 #include "hitechnic-irseeker-v2.h"
-#include "libraries/gyro.h"
-#include "libraries/pidturn.h"
-#include "libraries/library.h"
+#include "gyro.h"
+#include "pidturn.h"
+#include "main.h"
 
 GYRO g_Gyro;
 PIDTURN g_PidTurn;
