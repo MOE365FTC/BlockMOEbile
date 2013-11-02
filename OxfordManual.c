@@ -6,7 +6,7 @@
 #pragma config(Motor,  mtr_S1_C2_2,     motorG,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
-#pragma config(Servo,  srvo_S1_C4_1,    servo1,               tServoNone)
+#pragma config(Servo,  srvo_S1_C4_1,    dumper,               tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_2,    servo2,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_3,    servo3,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_4,    servo4,               tServoNone)
@@ -61,6 +61,9 @@ void redrawScreen(){
 
 
 task monitorOrange(){
+	PlaySound(soundBeepBeep);
+	PlaySound(soundFastUpwardTones);
+	servo[dumper] = 110;
 	while(true){
 
 		if(nNxtButtonPressed == ORANGE_BUTTON){
@@ -108,10 +111,10 @@ task main() {
 		}
 		else if(state == ARM){
 			if(nNxtButtonPressed == LEFT_BUTTON){
-				motor[arm] = -20;
+				motor[arm] = -70;
 			}
 			else if(nNxtButtonPressed == RIGHT_BUTTON){
-				motor[arm] = 20;
+				motor[arm] = 70;
 			}
 		}
 		else if(state == BUCKET){
