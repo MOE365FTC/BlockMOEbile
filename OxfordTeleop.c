@@ -15,6 +15,14 @@
 
 #include "JoystickDriver.c"  //Include file to "handle" the Bluetooth messages.
 
+//Write code that will slowly stop the arm, instead of suddenly.
+//Write code that will limit the range of the arm using the encoder.
+
+//The rightDrive encoder is correct, but the leftDrive encoder is backwards.
+//The lift encoder is backwards.
+//I believe that the arm encoder is correct
+
+
 
 
 void initializeRobot()
@@ -77,10 +85,10 @@ task main()
 
 		if(abs(joystick.joy2_y1)>30){
 			if(joy2Btn(5)){
-				motor[arm] = joystick.joy2_y1*70/abs(joystick.joy2_y1);
+				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
 			}
 			else{
-				motor[arm] = joystick.joy2_y1*70/abs(joystick.joy2_y1);
+				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
 			}
 		}
 		else{

@@ -30,7 +30,9 @@ const int DARK_BUTTON = 0;
 
 task main(){
 	PlaySound(soundBeepBeep);
+	wait1Msec(150);
 	PlaySound(soundFastUpwardTones);
+	wait1Msec(500);
 	servo[dumper] = 110;
 	eraseDisplay();
 	nxtDisplayStringAt(LEFT_X, BOTTOM_Y+5, "Left");
