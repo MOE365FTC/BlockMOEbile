@@ -35,12 +35,16 @@ task main()
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against bottom wall, with right edge of right wheels on left edge of third tile (6ft from right wall).
-	moveForwardInches(75, 1, true, LEFTENCODER);
+	moveForwardInches(75, 1, false, LEFTENCODER);
 	turn(g_PidTurn,-45);
+	clearEncoders();
 	while(HTIRS2readACDir(IR) != 5){
 		startForward(50);
 	}
 	stopDrive();
+	int totalTics= 0;//replace with actual value
+	int ticsToMove= totalTics- nMotorEncoder[leftDrive];
+	moveForwardTics(75, ticsToMove, false, LEFTENCODER);
 	while (true)
 	{}
 }
