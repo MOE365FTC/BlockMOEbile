@@ -1,12 +1,11 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     leftDrive,     tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C2_2,     motorG,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
-#pragma config(Servo,  srvo_S1_C4_1,    servo1,               tServoNone)
+#pragma config(Servo,  srvo_S1_C4_1,    dumper,               tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_2,    servo2,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_3,    servo3,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_4,    servo4,               tServoNone)
@@ -20,6 +19,7 @@
 
 void initializeRobot()
 {
+	servo[dumper] = 110;
 	return;
 }
 
@@ -80,7 +80,7 @@ task main()
 				motor[arm] = joystick.joy2_y1*70/abs(joystick.joy2_y1);
 			}
 			else{
-				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
+				motor[arm] = joystick.joy2_y1*70/abs(joystick.joy2_y1);
 			}
 		}
 		else{
