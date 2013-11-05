@@ -40,7 +40,7 @@ task main()
 	initializeRobot();
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
-	//Align against bottom wall, with right edge of right wheels on left edge of third tile (6ft from right wall).
+	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	moveForwardInches(75, 1, false, RIGHTENCODER);
 	turn(g_PidTurn, 45);
 	clearEncoders();
