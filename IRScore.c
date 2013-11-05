@@ -24,7 +24,7 @@
 GYRO g_Gyro;
 PIDTURN g_PidTurn;
 
-const int MIN_TURN_POWER = 22;
+const int MIN_TURN_POWER = 30;
 const float TURN_KP = 0.85;//Default was 0.9
 const float TURN_TOLERANCE = 0.3;
 
