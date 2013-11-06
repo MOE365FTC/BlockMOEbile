@@ -1,4 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     gyro,           sensorAnalogInactive)
 #pragma config(Sensor, S3,     IR,             sensorI2CCustom)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, PIDControl, encoder)
@@ -24,7 +25,7 @@
 GYRO g_Gyro;
 PIDTURN g_PidTurn;
 
-const int MIN_TURN_POWER = 30;
+const int MIN_TURN_POWER = 45;
 const float TURN_KP = 0.85;//Default was 0.9
 const float TURN_TOLERANCE = 0.3;
 
@@ -32,6 +33,7 @@ void initializeRobot(){
 	servo[dumper] = 247;
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
+	wait1Msec(1500);
 	return;
 }
 
@@ -41,17 +43,25 @@ task main()
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
-	moveForwardInches(75, 1, false, RIGHTENCODER);
-	turn(g_PidTurn, 45);
+	moveForwardInches(50, 1, false, RIGHTENCODER);
+	turn(g_PidTurn, 46);
 	clearEncoders();
 	while(HTIRS2readACDir(IR) != 5){
 		startForward(50);
 	}
 	stopDrive();
 	servo[dumper] = 30;
-	int totalTics = 0;//replace with actual value
+	motor[lift]= 50;
+	wait1Msec(700);
+	motor[lift]= 0;
+	servo[dumper] = 255;
+	const int totalTics = 7327;
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];
 	moveForwardTics(75, ticsToMove, false, RIGHTENCODER);
+	turn(g_PidTurn, -85,60);
+	moveForwardInches(75, 44, false, RIGHTENCODER);
+	turn(g_PidTurn, -95, 60);
+	moveForwardInches(75, 40, false, RIGHTENCODER);
 	while (true)
 	{}
 }
