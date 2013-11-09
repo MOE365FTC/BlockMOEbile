@@ -1,0 +1,2 @@
+Write code that will slowly stop the arm, instead of suddenly.
+Write code that will limit the range of the arm using the encoder.
