@@ -44,12 +44,14 @@ task main()
 		//Drive Code
 		int DriveLowerThreshold = 15;
 		int DriveUpperThreshold = 75;
-		if(joy1Btn(8)) DriveUpperThreshold = 100;
+		if(joy1Btn(8)) DriveUpperThreshold = 100;//if Btn 8 is pressed DriveUpperThreshold = 100???
 		int rightPower = joystick.joy1_y2;
 		int leftPower = joystick.joy1_y1;
-		if (abs(rightPower)> DriveUpperThreshold)
+
+		//This section controls the Drive motors
+		if (abs(rightPower)> DriveUpperThreshold)//if absolute value of rightPower is greater than DriveUpperThreshold
 		{
-			if (rightPower < 0) rightPower = DriveUpperThreshold * -1;
+			if (rightPower < 0) rightPower = DriveUpperThreshold * -1;//if rightPower is a neg
 			else  rightPower = DriveUpperThreshold;
 		}
 
@@ -82,24 +84,25 @@ task main()
 			motor[lift] = 0;
 		}
 
-
-		if(abs(joystick.joy2_y1)>30){
-			if(joy2Btn(5)){
-				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
+		//This section controls the arm with Btn 5
+		if(abs(joystick.joy2_y1)>30){//if joystick is less than 30
+			if(joy2Btn(5)){//if Btn 5 is pressed for speed boost
+				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);//sets motor power to 45(changed from 30 to 40 to 45)
 			}
-			else{
-				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
+			else{//if Btn 5 is not pressed - no speed boost
+				motor[arm] = joystick.joy2_y1*20/abs(joystick.joy2_y1);//changed from 40 to 30 to 25 back to 30 to 40 30 to 20 for lower speed due to the arm falling too fast
 			}
 		}
 		else{
 			motor[arm] = 0;
 		}
-
+		//This section controls the Bucket w/ Btn 4,
+		//Note:TopHat is the large circuler button with 4 arrows
 		if(joystick.joy2_TopHat == 4){
-			motor[bucket] = -60;
+			motor[bucket] = -20;//changed from 60 to 40 to 25 to 20
 		}
 		else if(joystick.joy2_TopHat == 0){
-			motor[bucket] = 60;
+			motor[bucket] = 20;
 		}
 		else{
 			motor[bucket] = 0;
