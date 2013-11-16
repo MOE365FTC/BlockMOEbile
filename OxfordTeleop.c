@@ -87,10 +87,12 @@ task main()
 
 		if(abs(joystick.joy2_y2)>30){    //If the right joystick on the secondary controller is above 30 in either direction:
 			if(joystick.joy2_y2 > 30){   //If the joystick is pushed up, raise the lift.
-				motor[lift] = 70;
+				if(joy2Btn(5)) motor[lift] = 100;
+				else motor[lift] = 70;
 			}
 			else{                        //If the joystick is pushed down, lower the lift slowly.
-				motor[lift] = -30;
+				if(joy2Btn(5)) motor[lift] = -45;
+				else motor[lift] = -30;
 			}
 		}
 		else{                            //If the right joystick on the secondary controller is not above 30 in either direction, stop the lift.
