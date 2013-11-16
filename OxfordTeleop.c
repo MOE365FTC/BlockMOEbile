@@ -114,10 +114,12 @@ task main()
 			//This section controls the Bucket w/ Btn 4,
 			//Note:TopHat is the large circuler button with 4 arrows
 			if(joystick.joy2_TopHat == 4){        //If the D-Pad is pressed downwards, move the bucket backwards.
-				motor[bucket] = -20;
+				if(joy2Btn(5)) motor[bucket] = -30;
+				else motor[bucket] = -20;
 			}
 			else if(joystick.joy2_TopHat == 0){  //If the D-Pad is pressed upwards, move the bucket forwards.
-				motor[bucket] = 20;
+				if(joy2Btn(5)) motor[bucket] = 30;
+				else motor[bucket] = 20;
 			}
 			else{                                //If the D-Pad is pressed in any other direction, stop the bucket.
 				motor[bucket] = 0;
