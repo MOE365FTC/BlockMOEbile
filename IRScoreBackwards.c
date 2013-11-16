@@ -44,7 +44,7 @@ task main()
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	moveForwardInches(50, 1, false, RIGHTENCODER); //away from wall
-	turn(g_PidTurn, 46); //turn to parallel with buckets
+	turn(g_PidTurn, 134); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 	while(HTIRS2readACDir(IR) != 5){ //finds the beacon
 		startBackward(50);
