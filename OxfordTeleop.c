@@ -48,21 +48,34 @@ task main()
 	{
 		getJoystickSettings(joystick); //Refresh the joystick status
 		//Drive Code
+
 		int DriveLowerThreshold = 15;             //The minimum drive speed.
 		int DriveUpperThreshold = 75;             //Default maximum drive speed.
 
+<<<<<<< HEAD
 		if(joy1Btn(8)) DriveUpperThreshold = 100; //If button 8 (bottom right trigger) on the primary driver's joystick is held down, set the maximum drive speed to 100. (Speed boost)
 
      	int rightPower = joystick.joy1_y2;        //Set rightPower to its proper joystick value.
 		int leftPower = joystick.joy1_y1;         //Set leftPower to its proper joystick value.
 
 		if (abs(rightPower)> DriveUpperThreshold) //If the power set by the right joystick is above the max drive speed, set the right power to whatever the max drive speed is.
+=======
+		if(joy1Btn(8)) DriveUpperThreshold = 100; //If button 8 (bottom right trigger) on the primary driver's joystick is held down,
+			//set the maximum drive speed to 100. (Speed boost)
+
+		int rightPower = joystick.joy1_y2;      //Set rightPower to its proper joystick value.
+		int leftPower = joystick.joy1_y1;         //Set leftPower to its proper joystick value.
+
+		if (abs(rightPower)> DriveUpperThreshold) //If the power set by the right joystick is above the max drive speed,
+			//set the right power to whatever the max drive speed is.
+>>>>>>> 62619061a704262a1ee1b2c6e23f0bd03ddfdc6b
 		{
 			if (rightPower < 0) rightPower = DriveUpperThreshold * -1; //If rightPower is negative, keep it negative as it is set to the max drive speed.
 			else  rightPower = DriveUpperThreshold;                    //If rightPower is positive, we can just set it to the max speed.
 		}
 
-		if(abs(leftPower) > DriveUpperThreshold) //If the power set by the left joystick is above the max drive speed, set the left power to whatever the max drive speed is.
+		if(abs(leftPower) > DriveUpperThreshold) //If the power set by the left joystick is above the max drive speed,
+			//set the left power to whatever the max drive speed is.
 		{
 			if (leftPower < 0) leftPower = DriveUpperThreshold*-1;     //If leftPower is negative, keep it negative as it is set to the max drive speed.
 			else leftPower= DriveUpperThreshold;                       //If leftPower is positive, we can just set it to the max speed.
@@ -83,10 +96,12 @@ task main()
 
 		if(abs(joystick.joy2_y2)>30){    //If the right joystick on the secondary controller is above 30 in either direction:
 			if(joystick.joy2_y2 > 30){   //If the joystick is pushed up, raise the lift.
-				motor[lift] = 70;
+				if(joy2Btn(6)) motor[lift] = 100;
+				else motor[lift] = 70;
 			}
 			else{                        //If the joystick is pushed down, lower the lift slowly.
-				motor[lift] = -30;
+				if(joy2Btn(6)) motor[lift] = -45;
+				else motor[lift] = -30;
 			}
 		}
 		else{                            //If the right joystick on the secondary controller is not above 30 in either direction, stop the lift.
@@ -97,16 +112,17 @@ task main()
 		if(abs(joystick.joy2_y1)>30){  //If the left joystick on the secondary controller is above 30 in either direction:
 			if(joy2Btn(5)){            //If the left shoulder button on the secondary controller is pressed:
 				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1); //Move the arm in the direction dictated by the controller at a preprogrammed, boosted speed.
-				                                                        //Right now, the "boost" speed is the same as the normal speed.
+				//Right now, the "boost" speed is the same as the normal speed.
 			}
 			else{                      //If the left shoulder button is not pressed:
-				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1); //Move the arm in the direction dictated by the controller at the normal preprogrammed speed.
+				motor[arm] = joystick.joy2_y1*20/abs(joystick.joy2_y1); //Move the arm in the direction dictated by the controller at the normal preprogrammed speed.
 			}
 		}
 		else{  //If the left joystick on the secondary controller is not above 30 in either direction, stop the arm.
 			motor[arm] = 0;
 		}
 
+<<<<<<< HEAD
 		if(joystick.joy2_TopHat == 4){        //If the D-Pad is pressed downwards, move the bucket backwards.
 			motor[bucket] = -40;
 		}
@@ -116,7 +132,22 @@ task main()
 		else{                                //If the D-Pad is pressed in any other direction, stop the bucket.
 			motor[bucket] = 0;
 		}
+=======
+			//This section controls the Bucket w/ Btn 4,
+			//Note:TopHat is the large circuler button with 4 arrows
+			if(joystick.joy2_TopHat == 4){        //If the D-Pad is pressed downwards, move the bucket backwards.
+				if(joy2Btn(5)) motor[bucket] = -30;
+				else motor[bucket] = -20;
+			}
+			else if(joystick.joy2_TopHat == 0){  //If the D-Pad is pressed upwards, move the bucket forwards.
+				if(joy2Btn(5)) motor[bucket] = 30;
+				else motor[bucket] = 20;
+			}
+			else{                                //If the D-Pad is pressed in any other direction, stop the bucket.
+				motor[bucket] = 0;
+			}
+>>>>>>> 62619061a704262a1ee1b2c6e23f0bd03ddfdc6b
 
 
+		}
 	}
-}
