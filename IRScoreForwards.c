@@ -1,5 +1,4 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     gyro,           sensorAnalogInactive)
 #pragma config(Sensor, S3,     IR,             sensorI2CCustom)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, PIDControl, encoder)
@@ -9,8 +8,8 @@
 #pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
 #pragma config(Servo,  srvo_S1_C4_1,    dumper,               tServoStandard)
-#pragma config(Servo,  srvo_S1_C4_2,    servo2,               tServoNone)
-#pragma config(Servo,  srvo_S1_C4_3,    servo3,               tServoNone)
+#pragma config(Servo,  srvo_S1_C4_2,    flagMount,            tServoStandard)
+#pragma config(Servo,  srvo_S1_C4_3,    flagRaiser,           tServoContinuousRotation)
 #pragma config(Servo,  srvo_S1_C4_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_6,    servo6,               tServoNone)
@@ -31,6 +30,7 @@ const float TURN_TOLERANCE = 0.3;
 
 void initializeRobot(){
 	servo[dumper] = 247;
+	servo[flagMount] = 30;
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
 	wait1Msec(1500);
@@ -46,7 +46,9 @@ task main()
 	moveForwardInches(50, 1, false, RIGHTENCODER); //away from wall
 	turn(g_PidTurn, 46); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
+	const int totalTics = 7327; //total tics from before IR to end-- DONT CHANGE!
 	while(HTIRS2readACDir(IR) != 5){ //finds the beacon
+		if(nMotorEncoder[rightDrive] >= totalTics-500) break;
 		startForward(50);
 	}
 	stopDrive();//stops robot
@@ -55,7 +57,6 @@ task main()
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = 255;//resets servo
-	const int totalTics = 7327;//total tics from before IR to end-- DONT CHANGE!
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];//tics left after IR
 	moveForwardTics(75, ticsToMove, false, RIGHTENCODER); //move to end after IR
 	turn(g_PidTurn, -85,60); //turn to go towards ramp
