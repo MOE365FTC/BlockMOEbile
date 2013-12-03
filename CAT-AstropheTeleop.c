@@ -1,5 +1,7 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
+#pragma config(Motor,  motorA,          flag1,         tmotorNXT, openLoop, encoder)
+#pragma config(Motor,  motorB,          flag2,         tmotorNXT, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     leftDrive,     tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, reversed, encoder)
@@ -35,8 +37,8 @@
 
 void initializeRobot()
 {
-	servo[dumper] = 255; //Get the autonomous block dumper out of the way vertically for TeleOp.
-	servo[flagMount] = 30; //Set the continuous servo mount tuckeed away to keep it safe
+	servo[dumper] = 233; //Get the autonomous block dumper out of the way vertically for TeleOp.
+	servo[flagMount] = 17; //Set the continuous servo mount tuckeed away to keep it safe
 	return;
 }
 
@@ -44,7 +46,8 @@ void initializeRobot()
 task main()
 {
 	initializeRobot();//set servos where needed
-
+	bool isFlagExtended = false;
+	bool waitingForRelease = false;
 	waitForStart();   // wait for start of tele-op phase
 
 	while (true)
@@ -119,11 +122,65 @@ task main()
 		else{                                //If the D-Pad is pressed in any other direction, stop the bucket.
 			motor[bucket] = 0;
 		}
-		if(joy2Btn(3)) servo[flagMount] = 127;//pivot out the servo 90 degrees if button 3 is pressed
+		if(joy2Btn(1)) {
+			if(!waitingForRelease){
+				if(!isFlagExtended) {
+					servo[flagMount] = 134;
+					isFlagExtended = true;//toggle out flag raiser
+				}
+				else{
+					servo[flagMount] = 17;
+					isFlagExtended = false;
+				}
+				waitingForRelease = true;
+			}
+		}
+		else {
+			if(waitingForRelease) waitingForRelease = false;
+		}
 
-		if(joy2Btn(1)) servo[flagMount] = 30;//pivot in the servo to the starting position if button 1 is pressed
 
-		if(joy2Btn(4)) servo[flagRaiser] = 255; else servo[flagRaiser] = 127;//while button 4 is pressed, spin the cont. rotation full speed
-
+		//if(joy2Btn(4)){
+		//	if(isFlagExtended){
+		//		motor[flag1] = 100;
+		//		motor[flag2] = 100;
+		//	}
+		//	else{
+		//		motor[flag1] = 0;
+		//		motor[flag2] = 0;
+		//	}
+		//}
+		//else{
+		//	motor[flag1] = 0;
+		//	motor[flag2] = 0;
+		//}
+		//if(joy2Btn(2)){
+		//	//if(isFlagExtended){
+		//	motor[flag1] = 50;
+		//	motor[flag2] = 50;
+		//}
+		////	else{
+		////		motor[flag1] = 0;
+		////		motor[flag2] = 0;
+		////	}
+		////}
+		//else{
+		//	motor[flag1] = 0;
+		//	motor[flag2] = 0;
+		//}
+		if(joy2Btn(4)){
+			servo[flagMount] = 134;
+			motor[flag1] = 100;
+			motor[flag2] = 100;
+		}
+		else if(joy2Btn(2)){
+			servo[flagMount] = 134;
+			motor[flag1] = 30;
+			motor[flag2] = 30;
+	 }
+		else{
+			motor[flag1] = 0;
+			motor[flag2] = 0;
+		}
 	}
 }
