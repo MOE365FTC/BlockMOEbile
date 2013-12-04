@@ -58,6 +58,7 @@ task main()
 		int DriveUpperThreshold = 75;             //Default maximum drive speed.
 
 		if(joy1Btn(8)) DriveUpperThreshold = 100; //If button 8 (bottom right trigger) on the primary driver's joystick is held down, set the maximum drive speed to 100. (Speed boost)
+		if(joy1Btn(7)) DriveUpperThreshold = 60;
 
 		int rightPower = joystick.joy1_y2;        //Set rightPower to its proper joystick value.
 		int leftPower = joystick.joy1_y1;         //Set leftPower to its proper joystick value.
