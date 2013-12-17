@@ -43,11 +43,11 @@ task main()
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
-	moveForwardInches(50, 1, false, RIGHTENCODER); //away from wall
+	moveForwardInches(60, 2, false, RIGHTENCODER); //away from wall
 	turn(g_PidTurn, 134); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 	while(HTIRS2readACDir(IR) != 5){ //finds the beacon
-		startBackward(50);
+		startBackward(60);
 	}
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
@@ -57,11 +57,11 @@ task main()
 	servo[dumper] = 255;//resets servo
 	const int totalTics = 7327;//total tics from before IR to end-- DONT CHANGE!
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];//tics left after IR
-	moveBackwardTics(75, ticsToMove, false, RIGHTENCODER); //move to end after IR
+	moveBackwardTics(90, ticsToMove, false, RIGHTENCODER); //move to end after IR
 	turn(g_PidTurn, -85,60); //turn to go towards ramp
-	moveForwardInches(75, 44, false, RIGHTENCODER); //forwards to ramp
+	moveForwardInches(90, 44, false, RIGHTENCODER); //forwards to ramp
 	turn(g_PidTurn, 95, 60); //turn to face ramp
-	moveForwardInches(75, 40, false, RIGHTENCODER);//onto ramp
+	moveForwardInches(90, 40, false, RIGHTENCODER);//onto ramp
 	while (true)
 	{}
 }

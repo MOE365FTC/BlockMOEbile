@@ -44,7 +44,7 @@ task main()
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	moveForwardInches(65, 1, false, RIGHTENCODER); //away from wall
-	turn(g_PidTurn, 43); //turn to parallel with buckets
+	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 	const int totalTics = 7327; //total tics from before IR to end-- DONT CHANGE!
 

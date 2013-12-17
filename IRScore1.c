@@ -44,7 +44,7 @@ task main()
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	moveForwardInches(50, 1, false, RIGHTENCODER); //away from wall
-	turn(g_PidTurn, 46); //turn to parallel with buckets
+	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 	const int totalTics = 7327; //total tics from before IR to end-- DONT CHANGE!
 	while(HTIRS2readACDir(IR) != 5){ //finds the beacon
@@ -59,7 +59,7 @@ task main()
 	servo[dumper] = 255;//resets servo
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];//tics left after IR
 	moveForwardTics(75, ticsToMove, false, RIGHTENCODER); //move to end after IR
-	turn(g_PidTurn, -85,60); //turn to go towards ramp
+	turn(g_PidTurn, -81,60); //turn to go towards ramp
 	moveForwardInches(75, 44, false, RIGHTENCODER); //forwards to ramp
 	turn(g_PidTurn, -95, 60); //turn to face ramp
 	moveForwardInches(75, 40, false, RIGHTENCODER);//onto ramp

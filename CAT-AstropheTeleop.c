@@ -115,10 +115,10 @@ task main()
 		}
 
 		if(joystick.joy2_TopHat == 4){        //If the D-Pad is pressed downwards, move the bucket backwards.
-			motor[bucket] = -40;
+			motor[bucket] = -30;
 		}
 		else if(joystick.joy2_TopHat == 0){  //If the D-Pad is pressed upwards, move the bucket forwards.
-			motor[bucket] = 40;
+			motor[bucket] = 30;
 		}
 		else{                                //If the D-Pad is pressed in any other direction, stop the bucket.
 			motor[bucket] = 0;
