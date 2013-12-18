@@ -25,8 +25,8 @@ void initializeRobot()
 	return;
 }
 
-
-//ranges: motor power = -100 to +100, joystick = -128 to +128
+//ranges: motor power = -100 to +100, joystick = -128 to +128.
+//For more prescise movement we normalize the values
 const float divider = 0.78125;// used to normalize joystick values
 const int driveLowerThreshold = 15;//prevents motors from straining at very low power if the joystick is not at center
 
@@ -75,16 +75,34 @@ task main()
 		motor[leftDrive] = leftPower;
 		motor[rightDrive] = rightPower;
 //Lift code
-		if(abs(joystick.joy2_y2) > 30){
-			if(joystick.joy2_y2 > 0){
-				if(joy2Btn(6) == 1){
-					motor[lift] = 100;
+		if(abs(joystick.joy2_y2) > 30){	//if the absolute value is > 30
+			if(joystick.joy2_y2 > 0){	//if it's a positive #
+				if(joy2Btn(6) == 1){	//if power boost Btn is prsd
+					motor[lift] = 100;	//set to high power
 				}
 				else{
-					motor[lift] = 70;
+					motor[lift] = 70;	//set to low power
 				}
-			}//end of 0 if
-		}//end of abs if
+			}
+			else{
+				if(joy2Btn(6) == 1){
+					motor[lift] = -100;
+				}
+				else{
+					motor[lift] = -70;
+				}
+			}
+
+			//if btn is prsd
+				//if encoder is > 50
+					//motor = -100
+				//else motor = 0
+			//else
+				//if encoder is > 50
+					//motor = -70
+				//else motor = 0
+
+		}//end of absolute value if
 		else{
 			motor[lift] = 0;
 		}
@@ -120,18 +138,17 @@ task main()
 			}
 		}
 //Flag code
-		if(joy2Btn(4) == 1){
-			servo[flagMount] = 134;
-			motor[flag] = 75;
+		if(joy2Btn(4) == 1){	//if Btn 4 is prsd
+			servo[flagMount] = 134;	//move servo to proper location
+			motor[flag] = 75;	//turns flag motor at high power (used after it's aligned with flag crank)
 		}
-		else if(joy2Btn(2) == 1){
-			servo[flagMount] = 134;
-			motor[flag] = 30;
+		else if(joy2Btn(2) == 1){	//if Btn 2 is prsd
+			servo[flagMount] = 134;	//move servo to proper location
+			motor[flag] = 30;	//turns flag motor at low power (used to align with flag crank)
 		}
 		else{
-			motor[flag] = 0;
+			motor[flag] = 0;	//motor is stopped
 		}
 
 	}//end bracket of loop
 }//end task main bracket
-//this is the Rack and pinion lift branch
