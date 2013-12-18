@@ -74,19 +74,6 @@ task main()
 		//setting both motor powers
 		motor[leftDrive] = leftPower;
 		motor[rightDrive] = rightPower;
-		////this section controls the wheels
-		//if(abs(joystick.joy1_y1) <= driveLowerThreshold){			//if absolute value of joystick is less than i5
-		//	motor[leftDrive] = 0;				//left wheels are stoped
-		//}
-		//else{
-		//	motor[leftDrive] = joystick.joy1_y1*divider;	//left motor power= normalized joystick value
-		//}
-		//if(abs(joystick.joy1_y2) <= driveLowerThreshold){
-		//	motor[rightDrive] = 0;		//right wheels are stoped
-		//}
-		//else{
-		//	motor[rightDrive] = joystick.joy1_y2*divider;		//right motor power= normalized joystick value
-		//}
 //Lift code
 		if(abs(joystick.joy2_y2) > 30){
 			if(joystick.joy2_y2 > 0){
