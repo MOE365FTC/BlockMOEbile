@@ -20,6 +20,7 @@
 #include "gyro.h"//include gyro drivers
 #include "pidturn.h"//includes pidturns
 #include "main.h"//includes main library
+#include "delay.h"//includes delay library
 
 GYRO g_Gyro;
 PIDTURN g_PidTurn;
@@ -39,10 +40,12 @@ void initializeRobot(){
 
 task main()
 {
-	initializeRobot();
+int timeToWait = requestTimeToWait();
+initializeRobot();
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
+	countdown(timeToWait);
 	moveForwardInches(50, 1, false, RIGHTENCODER); //away from wall
 	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
