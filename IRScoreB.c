@@ -48,7 +48,7 @@ initializeRobot();
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
 	moveForwardInches(60, 3, false, RIGHTENCODER); //away from wall
-	turn(g_PidTurn, 134); //turn to parallel with buckets
+	turn(g_PidTurn, 137); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 	moveBackwardInches(60,4, false, RIGHTENCODER);
 	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
