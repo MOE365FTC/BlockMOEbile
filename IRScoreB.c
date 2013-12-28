@@ -47,8 +47,8 @@ initializeRobot();
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
-	moveForwardInches(60, 3, false, RIGHTENCODER); //away from wall
-	turn(g_PidTurn, 137); //turn to parallel with buckets
+	moveForwardInches(60, 2, false, RIGHTENCODER); //away from wall
+	turn(g_PidTurn, 136); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 	moveBackwardInches(60,4, false, RIGHTENCODER);
 	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
@@ -56,7 +56,7 @@ initializeRobot();
 		startBackward(60);
 	}
 
-	//moveBackwardInchesNoReset(60, 8);
+	moveBackwardInchesNoReset(60, 4);
 
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
