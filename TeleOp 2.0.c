@@ -158,17 +158,14 @@ task main()
 		}
 		if(joy2Btn(4)){
 			servo[flagMount] = 134;
-			motor[flag1] = 100;
-			motor[flag2] = 100;
+			motor[flag] = 100;
 		}
 		else if(joy2Btn(2)){
 			servo[flagMount] = 134;
-			motor[flag1] = 30;
-			motor[flag2] = 30;
+			motor[flag] = 30;
 		}
 		else{
-			motor[flag1] = 0;
-			motor[flag2] = 0;
+			motor[flag] = 0;
 		}
 	}//end bracket of loop
 }//end task main bracket
