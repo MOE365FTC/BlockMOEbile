@@ -164,6 +164,10 @@ task main()
 			servo[flagMount] = 134;
 			motor[flag] = 30;
 		}
+		else if(joy2Btn(3)){
+			servo[flagMount] = 134;
+			motor[flag] = -30;
+		}
 		else{
 			motor[flag] = 0;
 		}
