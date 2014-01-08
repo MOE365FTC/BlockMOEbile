@@ -29,6 +29,8 @@ void initializeRobot()
 //For more prescise movement we normalize the values
 const float divider = 0.78125;// used to normalize joystick values
 const int driveLowerThreshold = 15;//prevents motors from straining at very low power if the joystick is not at center
+int drivePowerBoost = 100;
+int driveUpperThreshold = 85;
 
 task main()
 {
@@ -40,43 +42,41 @@ task main()
 		bool isFlagExtended = false;
 		bool waitingForRelease = false;
 		getJoystickSettings(joystick);	//retrieves current joystick positions
-		//Drive Code
+//Drive Code
 		int leftPower = joystick.joy1_y1;
 		int rightPower = joystick.joy1_y2;
 
 		//left motor normalization and stopping at low joystick value
 		if(abs(leftPower) <= driveLowerThreshold){	//if absolute value is < 15
-			leftPower = 0;
+			leftPower = 0;	//stop motors
+		}
+		if(joy1Btn(8) == 1){	//power boost btn
+			leftPower = drivePowerBoost;	//set to high power
 		}
 		else{
-			leftPower = joystick.joy1_y1*divider;	//left motor power= normalized joystick value
-		}
-		//Left power boost
-		if(joy1Btn(8) == 1){	//if Btn 8 is pressed
-			leftPower = leftPower+10;	//add 10 to variable
-			if(leftPower > 100){	//if its > 100 (the max motor power)
-				leftPower = 100;	//then it is just = 100
+			leftPower = joystick.joy1_y1*divider;	//normalize
+			if(leftPower > driveUpperThreshold){	//sets it to lower power than power boost so
+				leftPower = driveUpperThreshold;
 			}
 		}
 
 		//right motor normalization and stopping at low joystick value
 		if(abs(rightPower) <= driveLowerThreshold){	//if absolute value is < 15
-			rightPower = 0;
+			rightPower = 0;	//stop motors
+		}
+		if(joy1Btn(8) == 1){	//power boost btn
+			rightPower = drivePowerBoost;	//set to high power
 		}
 		else{
-			rightPower = joystick.joy1_y2*divider;	//normalize values
-		}
-		//Right power Boost
-		if(joy1Btn(8) == 1){	//if Btn 8 is pressed
-			rightPower = rightPower+10;	//add 10 to variable
-			if(rightPower > 100){	//if its > 100 (the max motor power)
-				rightPower = 100;	//then it is just = 100
+			rightPower = joystick.joy1_y2*divider;	//normalize
+			if(rightPower > driveUpperThreshold){	//sets it to lower power than power boost so
+				rightPower = driveUpperThreshold;
 			}
 		}
 		//setting both motor powers
 		motor[leftDrive] = leftPower;
 		motor[rightDrive] = rightPower;
-		//Lift code
+//Lift code
 		if(abs(joystick.joy2_y2) > 30){	//if the absolute value is > 30
 			if(joystick.joy2_y2 > 0){	//if it's a positive #
 				if(joy2Btn(6) == 1){	//if power boost Btn is prsd
@@ -94,16 +94,6 @@ task main()
 					motor[lift] = -70;
 				}
 			}
-
-			//if btn is prsd
-			//if encoder is > 50
-			//motor = -100
-			//else motor = 0
-			//else
-			//if encoder is > 50
-			//motor = -70
-			//else motor = 0
-
 		}//end of absolute value if
 		else{
 			motor[lift] = 0;
@@ -120,7 +110,7 @@ task main()
 		else{
 			motor[arm] = 0;
 		}
-		//Bucket code
+//Bucket code
 		//this section makes it go towards the front of the robot
 		if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
 			if(joy2Btn(5) == 1){ //if button 5 is pressed
@@ -139,7 +129,7 @@ task main()
 				motor[bucket] = -20; //else power = -20
 			}
 		}
-		//Flag code
+//Flag code
 		if(joy2Btn(1)) {
 			if(!waitingForRelease){
 				if(!isFlagExtended) {
