@@ -37,8 +37,10 @@ task main()
 
 	while (true)//infinite loop
 	{
+		bool isFlagExtended = false;
+		bool waitingForRelease = false;
 		getJoystickSettings(joystick);	//retrieves current joystick positions
-//Drive Code
+		//Drive Code
 		int leftPower = joystick.joy1_y1;
 		int rightPower = joystick.joy1_y2;
 
@@ -74,7 +76,7 @@ task main()
 		//setting both motor powers
 		motor[leftDrive] = leftPower;
 		motor[rightDrive] = rightPower;
-//Lift code
+		//Lift code
 		if(abs(joystick.joy2_y2) > 30){	//if the absolute value is > 30
 			if(joystick.joy2_y2 > 0){	//if it's a positive #
 				if(joy2Btn(6) == 1){	//if power boost Btn is prsd
@@ -94,19 +96,19 @@ task main()
 			}
 
 			//if btn is prsd
-				//if encoder is > 50
-					//motor = -100
-				//else motor = 0
+			//if encoder is > 50
+			//motor = -100
+			//else motor = 0
 			//else
-				//if encoder is > 50
-					//motor = -70
-				//else motor = 0
+			//if encoder is > 50
+			//motor = -70
+			//else motor = 0
 
 		}//end of absolute value if
 		else{
 			motor[lift] = 0;
 		}
-//Arm code
+		//Arm code
 		if(abs(joystick.joy2_y1) > 30){			//if absolute value of joystick is less than 15
 			if(joy2Btn(5) == 1){
 				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
@@ -118,37 +120,55 @@ task main()
 		else{
 			motor[arm] = 0;
 		}
-//Bucket code
+		//Bucket code
 		//this section makes it go towards the front of the robot
-		if(joystick.joy2_TopHat == 0){//if tophat is pressed up (0)
-			if(joy2Btn(5) == 1){//if button 5 is pressed
-				motor[bucket] = 30;//then bucket power = 30
+		if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
+			if(joy2Btn(5) == 1){ //if button 5 is pressed
+				motor[bucket] = 30; //then bucket power = 30
 			}
 			else{
-				motor[bucket] = 20;//else power =20
+				motor[bucket] = 20; //else power =20
 			}
 		}
 		//this section makes the bucket go towards the back of the robot
-		else if(joystick.joy2_TopHat == 4){//if prev is false and tophat is pressed down (4)
-			if(joy2Btn(5) == 1){//if button 5 is pressed
-				motor[bucket] = -30;//then bucket power = -30
+		else if(joystick.joy2_TopHat == 4){ //if prev is false and tophat is pressed down (4)
+			if(joy2Btn(5) == 1){   //if button 5 is pressed
+				motor[bucket] = -30; //then bucket power = -30
 			}
 			else{
-				motor[bucket] = -20;//else power = -20
+				motor[bucket] = -20; //else power = -20
 			}
 		}
-//Flag code
-		if(joy2Btn(4) == 1){	//if Btn 4 is prsd
-			servo[flagMount] = 134;	//move servo to proper location
-			motor[flag] = 75;	//turns flag motor at high power (used after it's aligned with flag crank)
+		//Flag code
+		if(joy2Btn(1)) {
+			if(!waitingForRelease){
+				if(!isFlagExtended) {
+					servo[flagMount] = 134;
+					isFlagExtended = true;//toggle out flag raiser
+				}
+				else{
+					servo[flagMount] = 17;
+					isFlagExtended = false;
+				}
+				waitingForRelease = true;
+			}
 		}
-		else if(joy2Btn(2) == 1){	//if Btn 2 is prsd
-			servo[flagMount] = 134;	//move servo to proper location
-			motor[flag] = 30;	//turns flag motor at low power (used to align with flag crank)
+		else {
+			if(waitingForRelease) waitingForRelease = false;
+		}
+		if(joy2Btn(4)){
+			servo[flagMount] = 134;
+			motor[flag1] = 100;
+			motor[flag2] = 100;
+		}
+		else if(joy2Btn(2)){
+			servo[flagMount] = 134;
+			motor[flag1] = 30;
+			motor[flag2] = 30;
 		}
 		else{
-			motor[flag] = 0;	//motor is stopped
+			motor[flag1] = 0;
+			motor[flag2] = 0;
 		}
-
 	}//end bracket of loop
 }//end task main bracket
