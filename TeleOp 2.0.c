@@ -6,7 +6,7 @@
 #pragma config(Motor,  mtr_S1_C1_2,     leftDrive,     tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_2,     flag,          tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, encoder)
+#pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
 #pragma config(Servo,  srvo_S1_C4_1,    dumper,               tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_2,    flagMount,            tServoStandard)
@@ -23,6 +23,7 @@ void initializeRobot()
 	servo[dumper] = 233;
 	servo[flagMount] = 17;
 	return;
+	nMotorEncoder[rightDrive] = 0;
 }
 
 //ranges: motor power = -100 to +100, joystick = -128 to +128.
@@ -37,6 +38,8 @@ task main()
 	initializeRobot();
 	waitForStart();   // wait for start of tele-op phase
 
+	nMotorEncoder[rightDrive] = 0;
+	nMotorEncoder[leftDrive] = 0;
 	while (true)//infinite loop
 	{
 		bool isFlagExtended = false;
@@ -143,23 +146,10 @@ task main()
 			motor[bucket] = 0;
 		}
 //Flag code
-		if(joy2Btn(1)) {
-			if(!waitingForRelease){
-				if(!isFlagExtended) {
-					servo[flagMount] = 134;
-					isFlagExtended = true;//toggle out flag raiser
-				}
-				else{
-					servo[flagMount] = 17;
-					isFlagExtended = false;
-				}
-				waitingForRelease = true;
-			}
+		if(joy2Btn(3)) {
+			servo[flagMount] = 134;
 		}
-		else {
-			if(waitingForRelease) waitingForRelease = false;
-		}
-		if(joy2Btn(4)){
+		else if(joy2Btn(4)){
 			servo[flagMount] = 134;
 			motor[flag] = 100;
 		}
@@ -167,9 +157,8 @@ task main()
 			servo[flagMount] = 134;
 			motor[flag] = 30;
 		}
-		else if(joy2Btn(3)){
-			servo[flagMount] = 134;
-			motor[flag] = -30;
+		else if(joy2Btn(1)){
+			servo[flagMount] = 17;
 		}
 		else{
 			motor[flag] = 0;

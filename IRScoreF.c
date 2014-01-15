@@ -52,8 +52,10 @@ initializeRobot();
 	const int totalTics = 7327; //total tics from before IR to end-- DONT CHANGE!
 	while(HTIRS2readACDir(IR) != 5){ //finds the beacon
 		if(nMotorEncoder[rightDrive] >= totalTics-500) break;
-		startForward(50);
+		startForward(40);
 	}
+	wait1Msec(500);
+	moveForwardInchesNoReset(40, 5, false, RIGHTENCODER);
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
 	motor[lift]= 50;//starts the lift up
