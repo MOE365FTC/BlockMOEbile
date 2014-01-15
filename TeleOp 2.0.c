@@ -45,7 +45,7 @@ task main()
 		bool isFlagExtended = false;
 		bool waitingForRelease = false;
 		getJoystickSettings(joystick);	//retrieves current joystick positions
-//Drive Code
+		//Drive Code
 		float leftPower = joystick.joy1_y1;
 		float rightPower = joystick.joy1_y2;
 
@@ -58,13 +58,13 @@ task main()
 				leftPower = drivePowerBoost*-1;
 			}
 			else{
-			leftPower = drivePowerBoost;	//set to high power
+				leftPower = drivePowerBoost;	//set to high power
 			}
 		}//end of else-if
 		else{
 			leftPower = joystick.joy1_y1*multiplier;	//normalize
 			//if(leftPower > driveUpperThreshold){	//sets it to lower power than power boost so
-				//leftPower = driveUpperThreshold;
+			//leftPower = driveUpperThreshold;
 			//}
 		}
 
@@ -77,7 +77,7 @@ task main()
 				rightPower = drivePowerBoost*-1;	//set to 100 reverse power
 			}
 			else{	//other wise- meaning it is a positve #
-			rightPower = drivePowerBoost;	//set to 100 forward power
+				rightPower = drivePowerBoost;	//set to 100 forward power
 			}
 		}	//end of else-if
 		else{
@@ -89,7 +89,10 @@ task main()
 		//setting both motor powers
 		motor[leftDrive] = leftPower;
 		motor[rightDrive] = rightPower;
-//Lift code
+
+
+
+		//Lift code
 		if(abs(joystick.joy2_y2) > 30){	//if the absolute value is > 30
 			if(joystick.joy2_y2 > 0){	//if it's a positive #
 				if(joy2Btn(6) == 1){	//if power boost Btn is prsd
@@ -111,7 +114,7 @@ task main()
 		else{
 			motor[lift] = 0;
 		}
-//Arm code
+		//Arm code
 		if(abs(joystick.joy2_y1) > 30){			//if absolute value of joystick is less than 15
 			if(joy2Btn(5) == 1){
 				motor[arm] = joystick.joy2_y1*60/abs(joystick.joy2_y1);
@@ -123,7 +126,7 @@ task main()
 		else{
 			motor[arm] = 0;
 		}
-//Bucket code
+		//Bucket code
 		//this section makes it go towards the front of the robot
 		if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
 			if(joy2Btn(5) == 1){ //if button 5 is pressed
@@ -145,7 +148,7 @@ task main()
 		else{
 			motor[bucket] = 0;
 		}
-//Flag code
+		//Flag code
 		if(joy2Btn(3)) {
 			servo[flagMount] = 134;
 		}
