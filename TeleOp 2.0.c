@@ -4,7 +4,7 @@
 #pragma config(Motor,  motorB,           ,             tmotorNXT, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     leftDrive,     tmotorTetrix, openLoop, reversed, encoder)
-#pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_2,     flag,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
@@ -27,10 +27,10 @@ void initializeRobot()
 
 //ranges: motor power = -100 to +100, joystick = -128 to +128.
 //For more prescise movement we normalize the values
-const float divider = 0.78125;// used to normalize joystick values
+const float multiplier = 0.3906;// used to normalize joystick values
 const int driveLowerThreshold = 15;//prevents motors from straining at very low power if the joystick is not at center
 int drivePowerBoost = 100;
-int driveUpperThreshold = 85;
+//int driveUpperThreshold = 85;
 
 task main()
 {
@@ -43,35 +43,45 @@ task main()
 		bool waitingForRelease = false;
 		getJoystickSettings(joystick);	//retrieves current joystick positions
 //Drive Code
-		int leftPower = joystick.joy1_y1;
-		int rightPower = joystick.joy1_y2;
+		float leftPower = joystick.joy1_y1;
+		float rightPower = joystick.joy1_y2;
 
 		//left motor normalization and stopping at low joystick value
 		if(abs(leftPower) <= driveLowerThreshold){	//if absolute value is < 15
 			leftPower = 0;	//stop motors
 		}
-		if(joy1Btn(8) == 1){	//power boost btn
-			leftPower = drivePowerBoost;	//set to high power
-		}
-		else{
-			leftPower = joystick.joy1_y1*divider;	//normalize
-			if(leftPower > driveUpperThreshold){	//sets it to lower power than power boost so
-				leftPower = driveUpperThreshold;
+		else if(joy1Btn(8) == 1){	//power boost btn
+			if(leftPower < 0){
+				leftPower = drivePowerBoost*-1;
 			}
+			else{
+			leftPower = drivePowerBoost;	//set to high power
+			}
+		}//end of else-if
+		else{
+			leftPower = joystick.joy1_y1*multiplier;	//normalize
+			//if(leftPower > driveUpperThreshold){	//sets it to lower power than power boost so
+				//leftPower = driveUpperThreshold;
+			//}
 		}
 
 		//right motor normalization and stopping at low joystick value
 		if(abs(rightPower) <= driveLowerThreshold){	//if absolute value is < 15
 			rightPower = 0;	//stop motors
 		}
-		if(joy1Btn(8) == 1){	//power boost btn
-			rightPower = drivePowerBoost;	//set to high power
-		}
-		else{
-			rightPower = joystick.joy1_y2*divider;	//normalize
-			if(rightPower > driveUpperThreshold){	//sets it to lower power than power boost so
-				rightPower = driveUpperThreshold;
+		else if(joy1Btn(8) == 1){	//power boost btn
+			if(rightPower < 0){	//if its a negative #
+				rightPower = drivePowerBoost*-1;	//set to 100 reverse power
 			}
+			else{	//other wise- meaning it is a positve #
+			rightPower = drivePowerBoost;	//set to 100 forward power
+			}
+		}	//end of else-if
+		else{
+			rightPower = joystick.joy1_y2*multiplier;	//normalize
+			//if(rightPower > driveUpperThreshold){	//sets it to lower power than power boost so
+			//	rightPower = driveUpperThreshold;
+			//}
 		}
 		//setting both motor powers
 		motor[leftDrive] = leftPower;
@@ -88,23 +98,23 @@ task main()
 			}
 			else{
 				if(joy2Btn(6) == 1){
-					motor[lift] = -100;
+					motor[lift] = -75;
 				}
 				else{
-					motor[lift] = -70;
+					motor[lift] = -40;
 				}
 			}
 		}//end of absolute value if
 		else{
 			motor[lift] = 0;
 		}
-		//Arm code
+//Arm code
 		if(abs(joystick.joy2_y1) > 30){			//if absolute value of joystick is less than 15
 			if(joy2Btn(5) == 1){
-				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
+				motor[arm] = joystick.joy2_y1*60/abs(joystick.joy2_y1);
 			}
 			else{
-				motor[arm] = joystick.joy2_y1*20/abs(joystick.joy2_y1);
+				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
 			}
 		}
 		else{
@@ -128,6 +138,9 @@ task main()
 			else{
 				motor[bucket] = -20; //else power = -20
 			}
+		}
+		else{
+			motor[bucket] = 0;
 		}
 //Flag code
 		if(joy2Btn(1)) {
