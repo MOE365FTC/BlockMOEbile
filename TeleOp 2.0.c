@@ -28,9 +28,10 @@ void initializeRobot()
 
 //ranges: motor power = -100 to +100, joystick = -128 to +128.
 //For more prescise movement we normalize the values
-const float multiplier = 0.3906;// used to normalize joystick values
+const float multiplier = 0.5078;// used to normalize joystick values
 const int driveLowerThreshold = 15;//prevents motors from straining at very low power if the joystick is not at center
-int drivePowerBoost = 100;
+int drivePowerBoost1 = 80;
+int drivePowerBoost2 = 100;
 //int driveUpperThreshold = 85;
 
 task main()
@@ -55,12 +56,20 @@ task main()
 		}
 		else if(joy1Btn(8) == 1){	//power boost btn
 			if(leftPower < 0){
-				leftPower = drivePowerBoost*-1;
+				leftPower = drivePowerBoost2*-1;
 			}
 			else{
-				leftPower = drivePowerBoost;	//set to high power
+				leftPower = drivePowerBoost2;	//set to high power
 			}
-		}//end of else-if
+		}
+		else if(joy1Btn(6) == 1){	//power boost btn
+			if(leftPower < 0){
+				leftPower = drivePowerBoost1*-1;
+			}
+			else{
+				leftPower = drivePowerBoost1;	//set to high power
+			}
+		}
 		else{
 			leftPower = joystick.joy1_y1*multiplier;	//normalize
 			//if(leftPower > driveUpperThreshold){	//sets it to lower power than power boost so
@@ -74,10 +83,18 @@ task main()
 		}
 		else if(joy1Btn(8) == 1){	//power boost btn
 			if(rightPower < 0){	//if its a negative #
-				rightPower = drivePowerBoost*-1;	//set to 100 reverse power
+				rightPower = drivePowerBoost2*-1;	//set to 100 reverse power
 			}
 			else{	//other wise- meaning it is a positve #
-				rightPower = drivePowerBoost;	//set to 100 forward power
+				rightPower = drivePowerBoost2;	//set to 100 forward power
+			}
+		}	//end of else-if
+		else if(joy1Btn(6) == 1){	//power boost btn
+			if(rightPower < 0){	//if its a negative #
+				rightPower = drivePowerBoost1*-1;	//set to 100 reverse power
+			}
+			else{	//other wise- meaning it is a positve #
+				rightPower = drivePowerBoost1;	//set to 100 forward power
 			}
 		}	//end of else-if
 		else{
