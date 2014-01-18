@@ -1,9 +1,10 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     gyro,           sensorAnalogInactive)
 #pragma config(Sensor, S3,     IR,             sensorI2CCustom)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, PIDControl, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     leftDrive,     tmotorTetrix, PIDControl, reversed, encoder)
-#pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_2,     motorG,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
@@ -49,19 +50,28 @@ initializeRobot();
 	moveForwardInches(50, 1, false, LEFTENCODER); //away from wall
 	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
-	const int totalTics = 7327; //total tics from before IR to end-- DONT CHANGE!
-	while(HTIRS2readACDir(IR) != 6){ //finds the beacon
+	const int totalTics = 7770; //total tics from before IR to end-- DONT CHANGE!
+	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
 		if(nMotorEncoder[rightDrive] >= totalTics-500) break;
-		startForward(40);
+		startForward(27);
+		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
+		//if(nNxtButtonPressed==ORANGE_BUTTON)while(true){};
 	}
 	wait1Msec(500);
-	//moveForwardInchesNoReset(40, 12, false, LEFTENCODER);
+	if(nMotorEncoder[rightDrive] >= 4000){
+		moveBackwardInchesNoReset(30, 5, false, LEFTENCODER);
+	}
+	else{
+		//moveForwardInchesNoReset(40, 28, false, LEFTENCODER);
+	}
+	nxtDisplayCenteredTextLine(1,"%d",nMotorEncoder[leftDrive]);
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
 	motor[lift]= 50;//starts the lift up
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = 255;//resets servo
+	wait1Msec(330);
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];//tics left after IR
 	moveForwardTics(75, ticsToMove, false, LEFTENCODER); //move to end after IR
 	turn(g_PidTurn, -81,60); //turn to go towards ramp
