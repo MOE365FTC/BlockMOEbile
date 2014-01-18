@@ -1,5 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S3,     touch,          sensorTouch)
 #pragma config(Motor,  motorA,           ,             tmotorNXT, openLoop, encoder)
 #pragma config(Motor,  motorB,           ,             tmotorNXT, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, encoder)
@@ -18,20 +18,32 @@
 
 #include "JoystickDriver.c"  //Include file to "handle" the Bluetooth messages.
 
+void initializeLift(){
+	motor[lift] = 30;
+	wait1Msec(200);
+	motor[lift] = -30;
+	while(!SensorValue[touch]){}
+	motor[lift] = 0;
+	nMotorEncoder[lift] = 0;
+}
+
 void initializeRobot()
 {
 	servo[dumper] = 233;
 	servo[flagMount] = 17;
+	initializeLift();
 	return;
 	nMotorEncoder[rightDrive] = 0;
+
 }
 
 //ranges: motor power = -100 to +100, joystick = -128 to +128.
 //For more prescise movement we normalize the values
 const float multiplier = 0.5078;// used to normalize joystick values
 const int driveLowerThreshold = 15;//prevents motors from straining at very low power if the joystick is not at center
-int drivePowerBoost1 = 80;
-int drivePowerBoost2 = 100;
+const int drivePowerBoost1 = 80;
+const int drivePowerBoost2 = 100;
+const int maxLiftHeight = 2000;
 //int driveUpperThreshold = 85;
 
 task main()
@@ -110,8 +122,11 @@ task main()
 
 
 		//Lift code
+		if(SensorValue[touch]){
+			nMotorEncoder[lift] = 0;
+		}
 		if(abs(joystick.joy2_y2) > 30){	//if the absolute value is > 30
-			if(joystick.joy2_y2 > 0){	//if it's a positive #
+			if(joystick.joy2_y2 > 0 && abs(nMotorEncoder[lift]) <= maxLiftHeight){	//if it's a positive #
 				if(joy2Btn(6) == 1){	//if power boost Btn is prsd
 					motor[lift] = 100;	//set to high power
 				}
@@ -119,7 +134,7 @@ task main()
 					motor[lift] = 70;	//set to low power
 				}
 			}
-			else{
+			else if(joystick.joy2_y2 > 0 && !SensorValue[touch]){
 				if(joy2Btn(6) == 1){
 					motor[lift] = -75;
 				}
@@ -127,6 +142,7 @@ task main()
 					motor[lift] = -40;
 				}
 			}
+			else motor[lift] = 0;
 		}//end of absolute value if
 		else{
 			motor[lift] = 0;
@@ -183,5 +199,7 @@ task main()
 		else{
 			motor[flag] = 0;
 		}
-	}//end bracket of loop
-}//end task main bracket
+
+
+	}		//end bracket of loop
+}			//end task main bracket
