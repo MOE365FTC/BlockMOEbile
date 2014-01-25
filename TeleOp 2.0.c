@@ -147,19 +147,19 @@ task main()
 		//this section makes it go towards the front of the robot
 		if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
 			if(joy2Btn(5) == 1){ //if button 5 is pressed
-				motor[bucket] = 35; //then bucket power = 30
+				motor[bucket] = 42; //then bucket power = 30
 			}
 			else{
-				motor[bucket] = 24; //else power =20
+				motor[bucket] = 28; //else power =20
 			}
 		}
 		//this section makes the bucket go towards the back of the robot
 		else if(joystick.joy2_TopHat == 4){ //if prev is false and tophat is pressed down (4)
 			if(joy2Btn(5) == 1){   //if button 5 is pressed
-				motor[bucket] = -35; //then bucket power = -30
+				motor[bucket] = -42; //then bucket power = -30
 			}
 			else{
-				motor[bucket] = -24; //else power = -20
+				motor[bucket] = -28; //else power = -20
 			}
 		}
 		else{
