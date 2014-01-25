@@ -72,14 +72,13 @@ task main()
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = 255;//resets servo
-	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
-	int ticsToMove= totalTics+ nMotorEncoder[leftDrive];//tics left after IR
-	nxtDisplayCenteredTextLine(0,"ticsToMove: %d", ticsToMove);
-	moveBackwardTics(90, ticsToMove, false, LEFTENCODER); //move to end after IR
-	turn(g_PidTurn, -85,60); //turn to go towards ramp
-	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
-	turn(g_PidTurn, 95, 60); //turn to face ramp
-	moveForwardInches(90, 40, false, LEFTENCODER);//onto ramp
-	while (true)
-	{}
+
+	wait1Msec(330);
+	int ticsToMove = abs(nMotorEncoder[leftDrive]) + 90;
+	moveForwardTics(90, ticsToMove, false, LEFTENCODER); //reverse back to start
+	turn(g_PidTurn, 95,60); //turn backwards to go towards ramp
+	moveBackwardInches(90, 38, false, LEFTENCODER); //forwards to ramp
+	turn(g_PidTurn, 87, 60); //turn to face away from ramp
+	moveForwardInches(90, 47, false, LEFTENCODER);//onto ramp
+	while(true){}
 }
