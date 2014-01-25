@@ -134,10 +134,10 @@ task main()
 		//Arm code
 		if(abs(joystick.joy2_y1) > 30){			//if absolute value of joystick is less than 15
 			if(joy2Btn(5) == 1){
-				motor[arm] = joystick.joy2_y1*60/abs(joystick.joy2_y1);
+				motor[arm] = joystick.joy2_y1*85/abs(joystick.joy2_y1);
 			}
 			else{
-				motor[arm] = joystick.joy2_y1*45/abs(joystick.joy2_y1);
+				motor[arm] = joystick.joy2_y1*60/abs(joystick.joy2_y1);
 			}
 		}
 		else{
@@ -147,19 +147,19 @@ task main()
 		//this section makes it go towards the front of the robot
 		if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
 			if(joy2Btn(5) == 1){ //if button 5 is pressed
-				motor[bucket] = 30; //then bucket power = 30
+				motor[bucket] = 35; //then bucket power = 30
 			}
 			else{
-				motor[bucket] = 20; //else power =20
+				motor[bucket] = 24; //else power =20
 			}
 		}
 		//this section makes the bucket go towards the back of the robot
 		else if(joystick.joy2_TopHat == 4){ //if prev is false and tophat is pressed down (4)
 			if(joy2Btn(5) == 1){   //if button 5 is pressed
-				motor[bucket] = -30; //then bucket power = -30
+				motor[bucket] = -35; //then bucket power = -30
 			}
 			else{
-				motor[bucket] = -20; //else power = -20
+				motor[bucket] = -24; //else power = -20
 			}
 		}
 		else{
