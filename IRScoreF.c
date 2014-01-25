@@ -32,7 +32,7 @@ const float TURN_TOLERANCE = 0.3;
 
 void initializeRobot(){
 	servo[dumper] = 247;
-	servo[flagMount] = 30;
+	servo[flagMount] = 17;
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
 	wait1Msec(1500);
@@ -41,8 +41,8 @@ void initializeRobot(){
 
 task main()
 {
-int timeToWait = requestTimeToWait();
-initializeRobot();
+	int timeToWait = requestTimeToWait();
+	initializeRobot();
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
@@ -77,7 +77,7 @@ initializeRobot();
 	turn(g_PidTurn, -81,60); //turn to go towards ramp
 	moveForwardInches(75, 44, false, LEFTENCODER); //forwards to ramp
 	turn(g_PidTurn, -95, 60); //turn to face ramp
-	moveForwardInches(75, 40, false, LEFTENCODER);//onto ramp
+	moveForwardInches(90, 47, false, LEFTENCODER);//onto ramp
 	while (true)
 	{}
 }

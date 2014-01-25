@@ -42,28 +42,36 @@ void initializeRobot(){
 task main()
 {
 int timeToWait = requestTimeToWait();
-initializeRobot();
+	initializeRobot();
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
-	moveForwardInches(65, 1, false, RIGHTENCODER); //away from wall
+	moveForwardInches(50, 1, false, LEFTENCODER); //away from wall
 	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
-	const int totalTics = 7327; //total tics from before IR to end-- DONT CHANGE!
-
-	disableDiagnosticsDisplay();
-	while(HTIRS2readACDir(IR) != 5){ //finds the beacon
-		nxtDisplayCenteredTextLine(5,"IR Dir:%d",HTIRS2readACDir(IR));
-		startForward(60);
+	const int totalTics = 7770; //total tics from before IR to end-- DONT CHANGE!
+	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
 		if(nMotorEncoder[rightDrive] >= totalTics-500) break;
+		startForward(27);
+		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
+		//if(nNxtButtonPressed==ORANGE_BUTTON)while(true){};
 	}
+	wait1Msec(500);
+	if(nMotorEncoder[rightDrive] >= 4000){
+		moveBackwardInchesNoReset(30, 5, false, LEFTENCODER);
+	}
+	else{
+		//moveForwardInchesNoReset(40, 28, false, LEFTENCODER);
+	}
+	nxtDisplayCenteredTextLine(1,"%d",nMotorEncoder[leftDrive]);
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
 	motor[lift]= 50;//starts the lift up
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
-	servo[dumper] = 233;//resets servo
+	servo[dumper] = 255;//resets servo
+	wait1Msec(330);
 	int ticsToMove = nMotorEncoder[rightDrive] + 90;
 	moveBackwardTics(90, ticsToMove, false, RIGHTENCODER); //reverse back to start
 	turn(g_PidTurn, 85,60); //turn backwards to go towards ramp

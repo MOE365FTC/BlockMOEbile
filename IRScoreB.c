@@ -32,7 +32,7 @@ const float TURN_TOLERANCE = 0.3;
 
 void initializeRobot(){
 	servo[dumper] = 247;
-	servo[flagMount] = 32;
+	servo[flagMount] = 17;
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
 	wait1Msec(1500);
@@ -41,16 +41,24 @@ void initializeRobot(){
 
 task main()
 {
-int timeToWait = requestTimeToWait();
-initializeRobot();
+	int timeToWait = requestTimeToWait();
+	initializeRobot();
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
-	moveForwardInches(60, 2, false, RIGHTENCODER); //away from wall
-	turn(g_PidTurn, 136); //turn to parallel with buckets
-	clearEncoders(); //clears encoder for the next step
-	moveBackwardInches(60,4, false, RIGHTENCODER);
+
+	moveForwardInches(50,2,false, LEFTENCODER);
+	turn(g_PidTurn, 90);
+	moveBackwardInches(50,15,false,LEFTENCODER);
+	turn(g_PidTurn,40);
+
+	//moveForwardInches(60, 1, false, LEFTENCODER); //away from wall
+	//turn(g_PidTurn, 136); //turn to parallel with buckets
+	//clearEncoders(); //clears encoder for the next step
+	//moveBackwardInches(60,4, false, LEFTENCODER);
+
+
 	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
 		//nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
 		startBackward(60);
@@ -64,14 +72,14 @@ initializeRobot();
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = 255;//resets servo
-	const int totalTics = 6926;//total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
 	int ticsToMove= totalTics+ nMotorEncoder[rightDrive];//tics left after IR
 	nxtDisplayCenteredTextLine(0,"ticsToMove: %d", ticsToMove);
-	moveBackwardTics(90, ticsToMove, false, RIGHTENCODER); //move to end after IR
+	moveBackwardTics(90, ticsToMove, false, LEFTENCODER); //move to end after IR
 	turn(g_PidTurn, -85,60); //turn to go towards ramp
-	moveForwardInches(90, 44, false, RIGHTENCODER); //forwards to ramp
+	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
 	turn(g_PidTurn, 95, 60); //turn to face ramp
-	moveForwardInches(90, 40, false, RIGHTENCODER);//onto ramp
+	moveForwardInches(90, 40, false, LEFTENCODER);//onto ramp
 	while (true)
 	{}
 }
