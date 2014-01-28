@@ -75,7 +75,7 @@ int timeToWait = requestTimeToWait();
 	int ticsToMove = nMotorEncoder[rightDrive] + 90;
 	moveBackwardTics(90, ticsToMove, false, RIGHTENCODER); //reverse back to start
 	turn(g_PidTurn, 85,60); //turn backwards to go towards ramp
-	moveBackwardInches(90, 44, false, RIGHTENCODER); //forwards to ramp
+	moveBackwardInches(90, 44, false, RIGHTENCODER); //forwards towards ramp
 	turn(g_PidTurn, 95, 60); //turn to face away from ramp
 	moveBackwardInches(90, 47, false, RIGHTENCODER);//onto ramp
 	while (true)

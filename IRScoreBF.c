@@ -48,10 +48,10 @@ task main()
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
 
-	moveForwardInches(50,2,false, LEFTENCODER);
-	turn(g_PidTurn, 90);
-	moveBackwardInches(50,15,false,LEFTENCODER);
-	turn(g_PidTurn,40);
+	moveForwardInches(50,2,false, LEFTENCODER);//away from wall
+	turn(g_PidTurn, 90);//turn to be closer to bucket angle
+	moveBackwardInches(50,15,false,LEFTENCODER);//move to get around buckets
+	turn(g_PidTurn,40);//turn to be parallel with buckets
 
 	//moveForwardInches(60, 1, false, LEFTENCODER); //away from wall
 	//turn(g_PidTurn, 136); //turn to parallel with buckets
@@ -64,7 +64,7 @@ task main()
 		startBackward(60);
 	}
 
-	moveBackwardInchesNoReset(60, 4);
+	moveBackwardInchesNoReset(60, 4);//correct for IR inaccuracy
 
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
