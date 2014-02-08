@@ -58,9 +58,11 @@ task main()
 	//clearEncoders(); //clears encoder for the next step
 	//moveBackwardInches(60,4, false, LEFTENCODER);
 
+	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
 
 	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
 		//nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
+		if(abs(nMotorEncoder[rightDrive]) >= totalTics-100) break;
 		startBackward(60);
 	}
 
@@ -72,7 +74,6 @@ task main()
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = 255;//resets servo
-	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
 	int ticsToMove= totalTics+ nMotorEncoder[leftDrive];//tics left after IR
 	nxtDisplayCenteredTextLine(0,"ticsToMove: %d", ticsToMove);
 	moveBackwardTics(90, ticsToMove, false, LEFTENCODER); //move to end after IR

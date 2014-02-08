@@ -52,7 +52,7 @@ task main()
 	clearEncoders(); //clears encoder for the next step
 	const int totalTics = 7770; //total tics from before IR to end-- DONT CHANGE!
 	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
-		if(nMotorEncoder[rightDrive] >= totalTics-500) break;
+		if(nMotorEncoder[rightDrive] >= totalTics-2000) break;
 		startForward(27);
 		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
 		//if(nNxtButtonPressed==ORANGE_BUTTON)while(true){};
