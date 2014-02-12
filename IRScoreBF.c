@@ -48,16 +48,6 @@ task main()
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
 
-	moveForwardInches(50,2,false, LEFTENCODER);//away from wall
-	turn(g_PidTurn, 90);//turn to be closer to bucket angle
-	moveBackwardInches(50,15,false,LEFTENCODER);//move to get around buckets
-	turn(g_PidTurn,40);//turn to be parallel with buckets
-
-	//moveForwardInches(60, 1, false, LEFTENCODER); //away from wall
-	//turn(g_PidTurn, 136); //turn to parallel with buckets
-	//clearEncoders(); //clears encoder for the next step
-	//moveBackwardInches(60,4, false, LEFTENCODER);
-
 
 	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
 		//nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
