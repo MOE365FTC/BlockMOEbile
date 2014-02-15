@@ -187,5 +187,9 @@ task main()
 		if(joy1Btn(5)) {
 			moveBackwardInches(25, 1, false, LEFTENCODER);
 		}
+		if(joy2Btn(6)) {
+			servo[dumper] = 30;
+		}
+		else servo[dumper] = 255;
 	}//end bracket of loop
 }//end task main bracket
