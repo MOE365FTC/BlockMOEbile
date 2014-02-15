@@ -34,7 +34,7 @@ const int driveLowerThreshold = 15;//prevents motors from straining at very low 
 int drivePowerBoost1 = 80;
 int drivePowerBoost2 = 100;
 //int driveUpperThreshold = 85;
-
+bool flagOut = false;
 task main()
 {
 	initializeRobot();
@@ -169,24 +169,28 @@ task main()
 		//Flag code
 		if(joy2Btn(3)) {
 			servo[flagMount] = 134;
+			flagOut = true;
 		}
-		else if(joy2Btn(4)){
+		else if(joy2Btn(4) && flagOut == true){
 			servo[flagMount] = 134;
 			motor[flag] = 100;
 		}
-		else if(joy2Btn(2)){
+		else if(joy2Btn(2) && flagOut == true){
 			servo[flagMount] = 134;
 			motor[flag] = 30;
 		}
 		else if(joy2Btn(1)){
 			servo[flagMount] = 17;
+			flagOut = false;
 		}
 		else{
 			motor[flag] = 0;
 		}
+		//nudge code
 		if(joy1Btn(5)) {
 			moveBackwardInches(25, 1, false, LEFTENCODER);
 		}
+		//dumper code for TeleOp
 		if(joy2Btn(6)) {
 			servo[dumper] = 30;
 		}
