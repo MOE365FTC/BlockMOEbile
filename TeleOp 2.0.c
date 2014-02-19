@@ -35,6 +35,7 @@ int drivePowerBoost1 = 80;
 int drivePowerBoost2 = 100;
 //int driveUpperThreshold = 85;
 bool flagOut = false;
+bool dumperOut = false;
 task main()
 {
 	initializeRobot();
@@ -177,7 +178,7 @@ task main()
 		}
 		else if(joy2Btn(2) && flagOut == true){
 			servo[flagMount] = 134;
-			motor[flag] = 30;
+			motor[flag] = 15;
 		}
 		else if(joy2Btn(1)){
 			servo[flagMount] = 17;
@@ -191,8 +192,10 @@ task main()
 			moveBackwardInches(25, 1, false, LEFTENCODER);
 		}
 		//dumper code for TeleOp
-		if(joy2Btn(6)) {
+		if(joy2Btn(6) && dumperOut == false) {
 			servo[dumper] = 30;
+			wait1Msec(5000);
+			dumperOut = true;
 		}
 		else servo[dumper] = 255;
 	}//end bracket of loop
