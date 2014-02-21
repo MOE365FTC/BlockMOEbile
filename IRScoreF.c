@@ -46,10 +46,8 @@ task main()
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
-	moveForwardInches(50, 1, false, LEFTENCODER); //away from wall
-	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
-	const int totalTics = 7770; //total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 7670; //total tics from before IR to end-- DONT CHANGE!
 	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
 		if(nMotorEncoder[rightDrive] >= totalTics-2000) break;
 		startForward(27);
