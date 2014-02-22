@@ -46,7 +46,8 @@ int timeToWait = requestTimeToWait();
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
 	countdown(timeToWait);
-
+	moveForwardInches(50, 1, false, LEFTENCODER); //away from wall
+	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 	const int totalTics = 7770; //total tics from before IR to end-- DONT CHANGE!
 	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
