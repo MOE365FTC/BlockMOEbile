@@ -47,11 +47,6 @@ task main()
 	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
 
-	moveForwardInches(50,2,false, LEFTENCODER);//forwards away from wall
-	turn(g_PidTurn, 90);//turn to be closer to bucket angle
-	moveBackwardInches(50,15,false,LEFTENCODER);//reverse to get around corner of buckets
-	turn(g_PidTurn,40);//turn to be parallel with buckets
-
 	//moveForwardInches(60, 1, false, LEFTENCODER); //away from wall
 	//turn(g_PidTurn, 136); //turn to parallel with buckets
 	//clearEncoders(); //clears encoder for the next step
@@ -61,7 +56,9 @@ task main()
 
 	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
 		//nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
-		if(abs(nMotorEncoder[rightDrive]) >= totalTics-100) break;
+
+		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
+		if(abs(nMotorEncoder[leftDrive]) >= totalTics-500) break;
 		startBackward(60);
 	}
 
@@ -76,10 +73,10 @@ task main()
 	int ticsToMove= totalTics+ nMotorEncoder[leftDrive];//tics left after IR
 	nxtDisplayCenteredTextLine(0,"ticsToMove: %d", ticsToMove);
 	moveBackwardTics(90, ticsToMove, false, LEFTENCODER); //move to end after IR
-	turn(g_PidTurn, -85,60); //turn to go towards ramp
-	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
-	turn(g_PidTurn, 95, 60); //turn to face ramp
-	moveForwardInches(90, 40, false, LEFTENCODER);//onto ramp
+	//turn(g_PidTurn, -85,60); //turn to go towards ramp
+	//moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
+	//turn(g_PidTurn, 95, 60); //turn to face ramp
+	//moveForwardInches(90, 40, false, LEFTENCODER);//onto ramp
 	while (true)
 	{}
 }
