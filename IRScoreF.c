@@ -50,7 +50,7 @@ task main()
 	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 
-	const int totalTics = 6840; //6840 total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 6950; //6840 total tics from before IR to end-- DONT CHANGE!
 
 	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
 		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
@@ -59,16 +59,19 @@ task main()
 		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
 		//if(nNxtButtonPressed==ORANGE_BUTTON)while(true){};
 	}
-	stopDrive();
-	PlaySound(soundBeepBeep);
+	//stopDrive();
+	//PlaySound(soundBeepBeep);
+	if(nMotorEncoder[rightDrive] >= 4000){ //If the IR is at the 3rd or 4th bucket
+		//	moveBackwardInchesNoReset(30, 5, false, LEFTENCODER);
+		moveForwardInchesNoReset(30,11,false, LEFTENCODER);
+	}
+	else{//If the IR is at the 1st or 2nd bucket
+		moveForwardInchesNoReset(30, 10, false, LEFTENCODER);
+	}
+	if(nMotorEncoder[leftDrive] >= 4700){ //If the IR is at the 4th bucket
+		moveForwardInchesNoReset(30,7,false,LEFTENCODER);
+	}
 
-	if(nMotorEncoder[rightDrive] >= 4000){
-	//	moveBackwardInchesNoReset(30, 5, false, LEFTENCODER);
-			moveForwardInchesNoReset(30,3,false, LEFTENCODER);
-	}
-	else{
-		moveForwardInchesNoReset(30, 12, false, LEFTENCODER);
-	}
 	nxtDisplayCenteredTextLine(1,"%d",nMotorEncoder[leftDrive]);
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
@@ -76,6 +79,7 @@ task main()
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = 255;//resets servo
+	while(true){}
 	wait1Msec(330);
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];//tics left after IR
 	moveForwardTics(75, ticsToMove, false, LEFTENCODER); //move to end after IR
