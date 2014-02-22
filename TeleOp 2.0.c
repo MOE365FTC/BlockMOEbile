@@ -197,6 +197,9 @@ task main()
 			clearTimer(T4);
 			dumperOut = true;
 		}
-		else if(time1[T1]>3000) servo[dumper] = 233;
+		else if(time1[T4]>3000){
+			servo[dumper] = 233;
+			dumperOut = false;
+		}
 	}//end bracket of loop
 }//end task main bracket
