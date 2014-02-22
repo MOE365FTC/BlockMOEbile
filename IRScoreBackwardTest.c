@@ -54,17 +54,23 @@ task main()
 	//clearEncoders(); //clears encoder for the next step
 	//moveBackwardInches(60,4, false, LEFTENCODER);
 
+	clearEncoders();
+	wait1Msec(50);
 	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
 
-	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
+	while(HTIRS2readACDir(IR) != 6){ //finds the beacon
 		nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
 
 		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
-		if(abs(nMotorEncoder[leftDrive]) >= totalTics-500) break;
-		startBackward(60);
+		//if(abs(nMotorEncoder[leftDrive]) >= totalTics-500) break;
+		startBackward(35);
 	}
-
-	moveBackwardInchesNoReset(60, 4);//reverse back a small amount to correct for IR inaccuracy
+	stopDrive();
+	wait1Msec(300);
+	while(HTIRS2readACDir (IR)!= 5){
+		startBackward(15);
+	}
+	moveBackwardInchesNoReset(30, 8);//reverse back a small amount to correct for IR inaccuracy
 
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
@@ -72,9 +78,9 @@ task main()
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = servoRestPosition;//resets servo
-	int ticsToMove= totalTics - nMotorEncoder[leftDrive];//tics left after IR
+	int ticsToMove= totalTics - abs(nMotorEncoder[leftDrive]);//tics left after IR
 	nxtDisplayCenteredTextLine(0,"TTM: %d", ticsToMove);
-	while(true){}
+	//while(true){}
 	moveBackwardTics(90, ticsToMove); //move to end after IR
 	turn(g_PidTurn, -85,60); //turn to go towards ramp
 	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
