@@ -86,6 +86,10 @@ task main()
 	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
 	turn(g_PidTurn, 95, 60); //turn to face ramp
 	moveForwardInches(90, 40, false, LEFTENCODER);//onto ramp
+    motor[lift]= -50;//starts the lift down
+	wait1Msec(500);
+	motor[lift]= 0;//stops lift
+
 	while (true)
 	{}
 }
