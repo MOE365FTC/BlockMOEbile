@@ -71,9 +71,9 @@ task main()
 	//while(true){}
 	stopDrive();//stops robot
 
-	if(ticsToIR <= 3700){
+	//if(ticsToIR <= 3700){
 		moveForwardInchesNoReset(30,5);
-	}
+	//}
 
 	servo[dumper] = 30;//dumps the block
 	motor[lift]= 50;//starts the lift up
@@ -88,7 +88,7 @@ task main()
 
 	moveForwardInches(75, 48); //forwards to ramp
 	turn(g_PidTurn, -110, 60); //turn to face ramp
-	moveForwardInches(90, 47);//onto ramp
+	moveForwardInches(90, 49);//onto ramp
 	motor[lift]= -50;//starts the lift up
 	wait1Msec(500);
 	motor[lift]= 0;//stops lift
