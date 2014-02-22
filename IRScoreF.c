@@ -30,8 +30,10 @@ const int MIN_TURN_POWER = 45;
 const float TURN_KP = 0.85;//Default was 0.9
 const float TURN_TOLERANCE = 0.3;
 
+const int servoRestPosition = 233;
+
 void initializeRobot(){
-	servo[dumper] = 247;
+	servo[dumper] = servoRestPosition;
 	servo[flagMount] = 17;
 	return;
 }
@@ -78,7 +80,7 @@ task main()
 	motor[lift]= 50;//starts the lift up
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
-	servo[dumper] = 255;//resets servo
+	servo[dumper] = servoRestPosition;//resets servo
 	while(true){}
 	wait1Msec(330);
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];//tics left after IR
