@@ -40,45 +40,59 @@ void initializeRobot(){
 
 task main()
 {
-int timeToWait = requestTimeToWait();
+	int timeToWait = requestTimeToWait();
 	initializeRobot();
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
-	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
+	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
-	moveForwardInches(50, 1, false, LEFTENCODER); //away from wall
+	moveForwardInches(50, 1); //away from wall
 	turn(g_PidTurn, 44); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
-	const int totalTics = 7770; //total tics from before IR to end-- DONT CHANGE!
+
+	const int totalTics = 7300; //6840 total tics from before IR to end-- DONT CHANGE!
+	int ticsToIR;
 	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
-		if(nMotorEncoder[rightDrive] >= totalTics-500) break;
+		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
+		if(nMotorEncoder[leftDrive] >= totalTics-2000) break;
 		startForward(27);
-		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
-		//if(nNxtButtonPressed==ORANGE_BUTTON)while(true){};
+		ticsToIR = nMotorEncoder[leftDrive];
+		nxtDisplayCenteredTextLine(6,"%d",ticsToIR);
 	}
-	wait1Msec(500);
-	if(nMotorEncoder[rightDrive] >= 4000){
-		moveBackwardInchesNoReset(30, 5, false, LEFTENCODER);
+	//stopDrive();
+	//PlaySound(soundBeepBeep);
+	stopDrive();
+	wait1Msec(300);
+	while(HTIRS2readACDir (IR) != 5){ //slow down to look for basket
+		startForward(15);
 	}
-	else{
-		//moveForwardInchesNoReset(40, 28, false, LEFTENCODER);
-	}
-	nxtDisplayCenteredTextLine(1,"%d",nMotorEncoder[leftDrive]);
+	//while(true){}
 	stopDrive();//stops robot
+
+	//if(ticsToIR <= 3700){
+	moveForwardInchesNoReset(30,5);
+	//}
+
 	servo[dumper] = 30;//dumps the block
 	motor[lift]= 50;//starts the lift up
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = servoRestPosition;//resets servo
+	//while(true)
 	wait1Msec(330);
-	int ticsToMove = nMotorEncoder[rightDrive] + 90;
-	moveBackwardTics(90, ticsToMove, false, RIGHTENCODER); //reverse back to start
+
+
+	int ticsToMove = nMotorEncoder[rightDrive] + 10;
+	moveBackwardTics(90, ticsToMove); //reverse back to start
 	turn(g_PidTurn, 85,60); //turn backwards to go towards ramp
-	moveBackwardInches(90, 44, false, RIGHTENCODER); //forwards towards ramp
+	moveBackwardInches(90, 44); //forwards towards ramp
 	turn(g_PidTurn, 95, 60); //turn to face away from ramp
-	moveBackwardInches(90, 47, false, RIGHTENCODER);//onto ramp
+	moveBackwardInches(90, 47);//onto ramp
+	motor[lift]= -50;//starts the lift up
+	wait1Msec(500);
+	motor[lift]= 0;//stops lift
 	while (true)
 	{}
 }
