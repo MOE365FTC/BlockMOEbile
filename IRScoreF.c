@@ -47,19 +47,23 @@ task main()
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
 	clearEncoders(); //clears encoder for the next step
-	const int totalTics = 7670; //total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 6840; //6840 total tics from before IR to end-- DONT CHANGE!
 	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
+		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
 		if(nMotorEncoder[rightDrive] >= totalTics-2000) break;
 		startForward(27);
 		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
 		//if(nNxtButtonPressed==ORANGE_BUTTON)while(true){};
 	}
-	wait1Msec(500);
+	stopDrive();
+	PlaySound(soundBeepBeep);
+
 	if(nMotorEncoder[rightDrive] >= 4000){
-		moveBackwardInchesNoReset(30, 5, false, LEFTENCODER);
+	//	moveBackwardInchesNoReset(30, 5, false, LEFTENCODER);
+			moveForwardInchesNoReset(30,3,false, LEFTENCODER);
 	}
 	else{
-		//moveForwardInchesNoReset(40, 28, false, LEFTENCODER);
+		moveForwardInchesNoReset(30, 12, false, LEFTENCODER);
 	}
 	nxtDisplayCenteredTextLine(1,"%d",nMotorEncoder[leftDrive]);
 	stopDrive();//stops robot
@@ -71,10 +75,14 @@ task main()
 	wait1Msec(330);
 	int ticsToMove= totalTics- nMotorEncoder[rightDrive];//tics left after IR
 	moveForwardTics(75, ticsToMove, false, LEFTENCODER); //move to end after IR
-	turn(g_PidTurn, -81,60); //turn to go towards ramp
-	moveForwardInches(75, 44, false, LEFTENCODER); //forwards to ramp
-	turn(g_PidTurn, -95, 60); //turn to face ramp
+	turn(g_PidTurn, -68,60); //turn to go towards ramp
+
+	moveForwardInches(75, 48, false, LEFTENCODER); //forwards to ramp
+	turn(g_PidTurn, -110, 60); //turn to face ramp
 	moveForwardInches(90, 47, false, LEFTENCODER);//onto ramp
+	motor[lift]= -50;//starts the lift up
+	wait1Msec(500);
+	motor[lift]= 0;//stops lift
 	while (true)
 	{}
 }
