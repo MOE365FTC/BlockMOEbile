@@ -194,9 +194,9 @@ task main()
 		//dumper code for TeleOp
 		if(joy2Btn(6) && dumperOut == false) {
 			servo[dumper] = 30;
-			wait1Msec(5000);
+			clearTimer(T4);
 			dumperOut = true;
 		}
-		else servo[dumper] = 255;
+		else if(time1[T1]>3000) servo[dumper] = 233;
 	}//end bracket of loop
 }//end task main bracket
