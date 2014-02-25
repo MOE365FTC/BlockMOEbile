@@ -10,7 +10,7 @@
 #pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
 #pragma config(Servo,  srvo_S1_C4_1,    dumper,               tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_2,    flagMount,            tServoStandard)
-#pragma config(Servo,  srvo_S1_C4_3,    servo3,               tServoNone)
+#pragma config(Servo,  srvo_S1_C4_3,    flagRaiser,           tServoContinuousRotation)
 #pragma config(Servo,  srvo_S1_C4_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C4_6,    servo6,               tServoNone)
@@ -44,19 +44,33 @@ task main()
 	initializeRobot();
 
 	waitForStart(); // Wait for the beginning of autonomous phase.
-	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
-
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
+	//Align against right wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
 
+	//moveForwardInches(60, 1, false, LEFTENCODER); //away from wall
+	//turn(g_PidTurn, 136); //turn to parallel with buckets
+	//clearEncoders(); //clears encoder for the next step
+	//moveBackwardInches(60,4, false, LEFTENCODER);
 
-	while(HTIRS2readACDir(IR) != 5 || HTIRS2readACDir(IR) == 0){ //finds the beacon
-		//nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
-		startBackward(60);
+	clearEncoders();
+	wait1Msec(50);
+	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
+
+	while(HTIRS2readACDir(IR) > 6){ //finds the beacon
+		nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
+
+		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
+		//if(abs(nMotorEncoder[leftDrive]) >= totalTics-500) break;
+		startBackward(35);
 	}
-
-	moveBackwardInchesNoReset(60, 4);//correct for IR inaccuracy
+	stopDrive();
+	wait1Msec(300);
+	while(HTIRS2readACDir (IR)!= 5){
+		startBackward(15);
+	}
+	moveBackwardInchesNoReset(30, 8.75);//reverse back a small amount to correct for IR inaccuracy
 
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
@@ -66,11 +80,14 @@ task main()
 	servo[dumper] = servoRestPosition;//resets servo
 
 	wait1Msec(330);
-	int ticsToMove = abs(nMotorEncoder[leftDrive]) + 90;
+	int ticsToMove = abs(nMotorEncoder[leftDrive]) - 720 ;
 	moveForwardTics(90, ticsToMove, false, LEFTENCODER); //reverse back to start
 	turn(g_PidTurn, 95,60); //turn backwards to go towards ramp
 	moveBackwardInches(90, 38, false, LEFTENCODER); //forwards to ramp
-	turn(g_PidTurn, 87, 60); //turn to face away from ramp
-	moveForwardInches(90, 47, false, LEFTENCODER);//onto ramp
+	turn(g_PidTurn, -95, 90); //turn to face ramp
+	moveBackwardInches(90, 40, false, LEFTENCODER);//onto ramp
+  motor[lift]= -50;//starts the lift down
+	wait1Msec(500);
+	motor[lift]= 0;//stops lift
 	while(true){}
 }

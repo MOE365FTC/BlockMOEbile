@@ -49,7 +49,7 @@ task main()
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
 	moveForwardInches(50, 1); //away from wall
-	turn(g_PidTurn, 44); //turn to parallel with buckets
+	turn(g_PidTurn, 45); //turn to parallel with buckets
 	clearEncoders(); //clears encoder for the next step
 
 	const int totalTics = 7300; //6840 total tics from before IR to end-- DONT CHANGE!
