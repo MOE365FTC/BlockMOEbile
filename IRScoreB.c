@@ -58,7 +58,7 @@ task main()
 	wait1Msec(50);
 	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
     
-	while(HTIRS2readACDir(IR) !<= 6){ //finds the beacon
+	while(HTIRS2readACDir(IR) > 6){ //finds the beacon
 		nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
         
 		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
