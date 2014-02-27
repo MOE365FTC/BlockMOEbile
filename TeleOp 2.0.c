@@ -194,12 +194,11 @@ task main()
 		//dumper code for TeleOp
 		if(joy2Btn(6) && dumperOut == false) {
 			servo[dumper] = 30;
-			clearTimer(T4);
-			dumperOut = true;
+			clearTimer(T4);//delay for boolean setting
+			dumperOut = true;//limits to one use per match
 		}
-		else if(time1[T4]>3000){
-			servo[dumper] = 233;
-			dumperOut = false;
+		else if(time1[T4]>3000){//wait for correct timer amount
+			servo[dumper] = 233;//reset servo
 		}
 	}//end bracket of loop
 }//end task main bracket
