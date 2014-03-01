@@ -20,7 +20,7 @@
 #include "hitechnic-irseeker-v2.h" //includes irseeker drivers
 #include "gyro.h"//include gyro drivers
 #include "pidturn.h"//includes pidturns
-#include "main.h"//includes main library
+#include "drive.h"//includes main library
 #include "delay.h"//includes delay library
 
 GYRO g_Gyro;
