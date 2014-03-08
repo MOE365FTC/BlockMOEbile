@@ -152,7 +152,7 @@ task main()
 				motor[bucket] = 42; //then bucket power = 30
 			}
 			else{
-				motor[bucket] = 28; //else power =20
+				motor[bucket] = 18; //else power =20
 			}
 		}
 		//this section makes the bucket go towards the back of the robot
