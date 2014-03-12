@@ -1,4 +1,3 @@
-\
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Motor,  motorA,           ,             tmotorNXT, openLoop, encoder)
@@ -148,12 +147,15 @@ task main()
 		}
 		//Bucket code
 		//this section makes it go towards the front of the robot
-		if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
-			motor[bucket] = 19; //else power =20
+		if(joy2Btn(4) && nMotorEncoder[bucket] > 300){//makes sure its not already up and button is pressed (kills when up or released)
+			motor[bucket] = -(0.033 * nMotorEncoder[bucket] + 5);//speed is linear fuction of angle (12 added for safety as 0 is approached)
+		}
+		else if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
+			motor[bucket] = 35; //else power =20
 		}
 		//this section makes the bucket go towards the back of the robot
 		else if(joystick.joy2_TopHat == 4){ //if prev is false and tophat is pressed down (4)
-			motor[bucket] = -19; //else power = -20
+			motor[bucket] = -35; //else power = -20
 		}
 		else{
 			motor[bucket] = 0;
