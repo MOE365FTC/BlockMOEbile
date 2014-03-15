@@ -185,9 +185,9 @@ task main()
 			moveBackwardInches(25, 1, false, LEFTENCODER);
 		}
 		//dumper code for TeleOp
-		if(joy2Btn(6) && dumperOut == false) {
+		if(joy2Btn(5) && dumperOut == false) {
 			servo[dumper] = 30;
-			clearTimer(T4);//delay for boolean setting
+			ClearTimer(T4);//delay for boolean setting
 			dumperOut = true;//limits to one use per match
 		}
 		else if(time1[T4]>3000){//wait for correct timer amount
