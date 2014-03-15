@@ -1,4 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Motor,  motorA,           ,             tmotorNXT, openLoop, encoder)
 #pragma config(Motor,  motorB,           ,             tmotorNXT, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, encoder)
@@ -6,7 +7,7 @@
 #pragma config(Motor,  mtr_S1_C2_1,     lift,          tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_2,     flag,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     arm,           tmotorTetrix, openLoop, reversed, encoder)
-#pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, PIDControl, encoder)
+#pragma config(Motor,  mtr_S1_C3_2,     bucket,        tmotorTetrix, openLoop, encoder)
 #pragma config(Servo,  srvo_S1_C4_1,    dumper,               tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_2,    flagMount,            tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_3,    flagRaiser,           tServoContinuousRotation)
@@ -113,25 +114,17 @@ task main()
 		//Lift code
 		if(abs(joystick.joy2_y2) > 30){	//if the absolute value is > 30
 			if(joystick.joy2_y2 > 0){	//if it's a positive #
-				if(joy2Btn(6) == 1){	//if power boost Btn is prsd
-					motor[lift] = 100;	//set to high power
-				}
-				else{
-					motor[lift] = 70;	//set to low power
-				}
+				motor[lift] = 70;	//set to low power
 			}
 			else{
-				if(joy2Btn(6) == 1){
-					motor[lift] = -75;
-				}
-				else{
-					motor[lift] = -40;
-				}
+				motor[lift] = -40;
 			}
 		}//end of absolute value if
 		else{
 			motor[lift] = 0;
 		}
+
+
 		//Arm code
 		if(abs(joystick.joy2_y1) > 30){			//if absolute value of joystick is less than 15
 			if(joy2Btn(5) == 1){
@@ -150,11 +143,11 @@ task main()
 			motor[bucket] = -(0.033 * nMotorEncoder[bucket] + 5);//speed is linear fuction of angle (12 added for safety as 0 is approached)
 		}
 		else if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
-			motor[bucket] = 60; //else power =20  //35 without PID
+			motor[bucket] = 40; //else power =20  //35 without PID
 		}
 		//this section makes the bucket go towards the back of the robot
 		else if(joystick.joy2_TopHat == 4){ //if prev is false and tophat is pressed down (4)
-			motor[bucket] = -60; //else power = -20 //35 without PID
+			motor[bucket] = -40; //else power = -20 //35 without PID
 		}
 		else{
 			motor[bucket] = 0;
