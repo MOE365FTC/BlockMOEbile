@@ -140,8 +140,14 @@ task main()
 		//Bucket code
 		//this section makes it go towards the front of the robot
 		if(joy2Btn(8) && nMotorEncoder[bucket] > 200){//makes sure its not already up and button is pressed (kills when up or released) 400
-			motor[bucket] = -(0.033 * nMotorEncoder[bucket] + 5);//speed is linear fuction of angle (12 added for safety as 0 is approached)
+			motor[bucket] = -(0.033 * nMotorEncoder[bucket] + 5);//speed is linear fuction of angle (5 added for safety as 0 is approached) NEEDS NEW SLOPE FOR NEW GEAR RATIO
 		}
+        else if(joy2Btn(7)){
+            if(nMotorEncoder[arm] < 1000){//1000 is placeholder value
+                motor[bucket] = (0.033 * nMotorEncoder[bucket] + 5) //change slope
+            }
+            else motor[bucket] = -(0.033 * nMotorEncoder[bucket] + 5)//change slope
+        }
 		else if(joystick.joy2_TopHat == 0){ //if tophat is pressed up (0)
 			motor[bucket] = 40; //else power =20  //35 without PID
 		}
