@@ -150,9 +150,11 @@ task main()
 		}
 		//Bucket code
 		//this section makes it go towards the front of the robot
-		if(joy2Btn(8) && nMotorEncoder[bucket] > 200){//makes sure its not already up and button is pressed (kills when up or released) 400
-				motor[bucket] = -(0.033 * nMotorEncoder[bucket] + 5);//speed is linear fuction of angle (5 added for safety as 0 is approached) NEEDS NEW SLOPE FOR NEW GEAR RATIO
-
+		if(joy2Btn(8)){//kills on button release
+				if(nMotorEncoder[bucket] > 100)//makes sure not already up (for front side)
+					motor[bucket] = -(0.033 * abs(nMotorEncoder[bucket]) + 5);//speed is linear fuction of angle (5 added for safety as 0 is approached) NEEDS NEW SLOPE FOR NEW GEAR RATIO
+				else if (nMotorEncoder[bucket] < 100)//if back, go the other way (from over the back)
+					motor[bucket] = (0.033 * abs(nMotorEncoder[bucket]) + 5);//opposite direction function for over the back
 		}
 
 		else if(joy2Btn(7)){
