@@ -47,15 +47,15 @@ task main()
 	//Initialize the gyro and turning
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
-
-	moveForwardInches(68,47);
-	turn(g_PidTurn,47);
+	moveForwardInches(60,50);
+	//moveForwardInches(60,43);//initial forwards
+	turn(g_PidTurn,46);
 
 	//Execute IRScoreB with reduced totalTics
 	clearEncoders();
 	wait1Msec(50);
 	const int totalTics = 6800;//total tics from before IR to end-- DONT CHANGE!
-
+	clearEncoders();
 	while(HTIRS2readACDir(IR) > 6){ //finds the beacon
 		nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
 
@@ -68,11 +68,14 @@ task main()
 	while(HTIRS2readACDir (IR)!= 5){
 		startBackward(15);
 	}
-	if(abs(nMotorEncoder[leftDrive]) > 50){
-		moveBackwardInchesNoReset(30, 8.75);//reverse back a small amount to correct for IR inaccuracy
+	return;
+	wait1MSec(4000);
+	if(abs(nMotorEncoder[leftDrive]) < 111){//bucket 4
+		wait1MSec(2000);
+		moveBackwardInchesNoReset(30, 0);//reverse back a small amount to correct for IR inaccuracy
  	}
  	else{
- 		moveBackwardInchesNoReset(30, 3);
+ 		moveBackwardInchesNoReset(30, 5);//bucket 3
  	}
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
@@ -80,6 +83,7 @@ task main()
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = servoRestPosition;//resets servo
+	return;
 	int ticsToMove= totalTics - abs(nMotorEncoder[leftDrive]);//tics left after IR
 	nxtDisplayCenteredTextLine(0,"TTM: %d", ticsToMove);
 	//while(true){}

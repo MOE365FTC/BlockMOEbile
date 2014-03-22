@@ -137,12 +137,18 @@ task main()
 
 
 		//Arm code
-		if(abs(joystick.joy2_y1) > 30){			//if absolute value of joystick is less than 15
+		if(abs(joystick.joy2_y1) > 30){			//if absolute value of joystick is less than 30
 			if(joy2Btn(5) == 1){
-				motor[arm] = joystick.joy2_y1*85/abs(joystick.joy2_y1);
+				if( (abs(nMotorEncoder[arm]) >= 9000) && joystick.joy2_y1 > 0)
+						motor[arm] = 0;
+				else
+					motor[arm] = joystick.joy2_y1*85/abs(joystick.joy2_y1);
 			}
 			else{
-				motor[arm] = joystick.joy2_y1*60/abs(joystick.joy2_y1);
+				if((abs(nMotorEncoder[arm]) >= 9000) && joystick.joy2_y1 > 0)
+						motor[arm] = 0;
+				else
+					motor[arm] = joystick.joy2_y1*75/abs(joystick.joy2_y1);
 			}
 		}
 		else{
@@ -151,9 +157,9 @@ task main()
 		//Bucket code
 		//this section makes it go towards the front of the robot
 		if(joy2Btn(8)){//kills on button release
-				if(nMotorEncoder[bucket] > 100)//makes sure not already up (for front side)
+				if(nMotorEncoder[bucket] > 150)//makes sure not already up (for front side)
 					motor[bucket] = -(0.033 * abs(nMotorEncoder[bucket]) + 5);//speed is linear fuction of angle (5 added for safety as 0 is approached) NEEDS NEW SLOPE FOR NEW GEAR RATIO
-				else if (nMotorEncoder[bucket] < 100)//if back, go the other way (from over the back)
+				else if (nMotorEncoder[bucket] < 150)//if back, go the other way (from over the back)
 					motor[bucket] = (0.033 * abs(nMotorEncoder[bucket]) + 5);//opposite direction function for over the back
 		}
 
