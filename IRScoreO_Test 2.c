@@ -59,13 +59,13 @@ task main()
 	const int ticsToSubtract = 111;//failsafe, may still need testing
 
 	//finding IR
-		while(HTIRS2readACDir(IR) != 4){ //finds the beacon zone 4 (rough)
+		while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < ticsToMove - ticsToSubtract)){ //finds the beacon zone 4 (rough)
 		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
 		startBackward(27);
 	}
 	stopDrive();
 	wait1Msec(300);
-	while(HTIRS2readACDir (IR) != 5){ //slow down to look for basket (fine)
+	while(HTIRS2readACDir(IR) != 5 && (abs(nMotorEncoder[leftDrive]) < ticsToMove - ticsToSubtract)){ //slow down to look for basket (fine)
 		startForward(15);
 	}
 	int currentPosition = abs(nMotorEncoder[leftDrive]);
