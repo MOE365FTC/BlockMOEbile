@@ -72,7 +72,7 @@ task main()
 	stopDrive();//stops robot
 
 	//if(ticsToIR <= 3700){
-	moveForwardInchesNoReset(30,5);
+	moveForwardInchesNoReset(30,6.5);
 	//}
 
 	servo[dumper] = 30;//dumps the block

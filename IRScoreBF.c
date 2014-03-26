@@ -56,21 +56,25 @@ task main()
 
 	clearEncoders();
 	wait1Msec(50);
-	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 7583;//total tics from before IR to end-- DONT CHANGE!
+	const int ticsToCenter = 3696;//tics from start to central beam
+	const int ticsToSubtract = 1665;//failsafe, may still need testing
 
-	while(HTIRS2readACDir(IR) > 6){ //finds the beacon
-		nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
-
-		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
-		//if(abs(nMotorEncoder[leftDrive]) >= totalTics-500) break;
-		startBackward(35);
+	//finding IR
+		while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
+		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
+		startBackward(27);
 	}
 	stopDrive();
 	wait1Msec(300);
-	while(HTIRS2readACDir (IR)!= 5){
-		startBackward(15);
+	while(HTIRS2readACDir(IR) != 5 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //slow down to look for basket (fine)
+		startForward(15);
 	}
-	moveBackwardInchesNoReset(30, 8.75);//reverse back a small amount to correct for IR inaccuracy
+	int currentPosition = abs(nMotorEncoder[leftDrive]);
+	if (currentPosition > ticsToCenter)//check where we are
+		moveForwardInchesNoReset(20, 7);//move forwards 5 inches (buckets 1 and 2)
+	else
+		moveForwardInchesNoReset(20, 3);//forwards 3 inches (buckets 3 and 4)
 
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block

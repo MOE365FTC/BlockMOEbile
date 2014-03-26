@@ -41,12 +41,14 @@ void initializeRobot(){
 
 task main()
 {
+	int timeToWait = requestTimeToWait();
 	initializeRobot();
 	waitForStart();
 	disableDiagnosticsDisplay();
 	//Initialize the gyro and turning
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
+	countdown(timeToWait);
 
 	//Start actual movement code
 	moveForwardInches(60,43);//initial forwards
@@ -56,21 +58,21 @@ task main()
 	wait1Msec(50);
 	const int totalTics = 6806;//total tics from before IR to end- CHANGED FOR LESSENED AMOUNT OF FORWARDS
 	const int ticsToCenter = 3663;//tics from start to central beam
-	const int ticsToSubtract = 111;//failsafe, may still need testing
+	const int ticsToSubtract = 1665;//failsafe, may still need testing
 
 	//finding IR
-		while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < ticsToMove - ticsToSubtract)){ //finds the beacon zone 4 (rough)
+		while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
 		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
 		startBackward(27);
 	}
 	stopDrive();
 	wait1Msec(300);
-	while(HTIRS2readACDir(IR) != 5 && (abs(nMotorEncoder[leftDrive]) < ticsToMove - ticsToSubtract)){ //slow down to look for basket (fine)
+	while(HTIRS2readACDir(IR) != 5 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //slow down to look for basket (fine)
 		startForward(15);
 	}
 	int currentPosition = abs(nMotorEncoder[leftDrive]);
 	if (currentPosition > ticsToCenter)//check where we are
-		moveForwardInchesNoReset(20, 5);//move forwards 5 inches (buckets 1 and 2)
+		moveForwardInchesNoReset(20, 6);//move forwards 5 inches (buckets 1 and 2)
 	else
 		moveForwardInchesNoReset(20, 3);//forwards 3 inches (buckets 3 and 4)
 	stopDrive();//stops robot
