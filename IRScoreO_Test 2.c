@@ -52,7 +52,7 @@ task main()
 
 	//Start actual movement code
 	moveForwardInches(60,43);//initial forwards
-	turn(g_PidTurn,45);
+	turn(g_PidTurn,45,20);
 
 	clearEncoders();
 	wait1Msec(50);
@@ -61,8 +61,8 @@ task main()
 	const int ticsToSubtract = 1665;//failsafe, may still need testing
 
 	//finding IR
-		while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
-		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
+	while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
+		//nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
 		startBackward(27);
 	}
 	stopDrive();
@@ -84,9 +84,9 @@ task main()
 	int ticsToMove= totalTics - abs(nMotorEncoder[leftDrive]);//tics left after IR
 	nxtDisplayCenteredTextLine(0,"TTM: %d", ticsToMove);
 	moveBackwardTics(90, ticsToMove); //move to end after IR
-	turn(g_PidTurn, -87,60); //turn to go towards ramp
+	turn(g_PidTurn, -87,40); //turn to go towards ramp
 	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
-	turn(g_PidTurn, 95, 60); //turn to face ramp
+	turn(g_PidTurn, 95, 40); //turn to face ramp
 	moveForwardInches(90, 45, false, LEFTENCODER);//onto ramp
 	motor[lift]= -50;//starts the lift down
 	wait1Msec(500);

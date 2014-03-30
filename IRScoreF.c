@@ -48,15 +48,16 @@ task main()
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
 	//Align against bottom wall, with left edge of left wheels on left edge of third tile (6ft from right wall).
 	countdown(timeToWait);
-	moveForwardInches(50, 1); //away from wall
-	turn(g_PidTurn, 45); //turn to parallel with buckets
+	moveForwardInches(35, 1); //away from wall
+	turn(g_PidTurn, 45, 20); //turn to parallel with buckets at 20% speed
 	clearEncoders(); //clears encoder for the next step
 
-	const int totalTics = 7300; //6840 total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 7078; //6840 total tics from before IR to end-- DONT CHANGE!
+	const int ticsToCenter = 3979;
+	const int ticsToSubtract = 1110;
 	int ticsToIR;
-	while(HTIRS2readACDir(IR) != 4){ //finds the beacon
+	while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive])) < (totalTics - ticsToSubtract)){ //finds the beacon
 		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
-		if(nMotorEncoder[leftDrive] >= totalTics-2000) break;
 		startForward(27);
 		ticsToIR = nMotorEncoder[leftDrive];
 		nxtDisplayCenteredTextLine(6,"%d",ticsToIR);
@@ -65,14 +66,17 @@ task main()
 	//PlaySound(soundBeepBeep);
 	stopDrive();
 	wait1Msec(300);
-	while(HTIRS2readACDir (IR) != 5){ //slow down to look for basket
+	while(HTIRS2readACDir (IR) != 5 && (abs(nMotorEncoder[leftDrive])) < (totalTics-ticsToSubtract)){ //slow down to look for basket
 		startForward(15);
 	}
 	//while(true){}
 	stopDrive();//stops robot
-
-	//if(ticsToIR <= 3700){
-		moveForwardInchesNoReset(30,5);
+	//wait1Msec(30000); //FOR DEBUGGING
+	int currentPosition = abs(nMotorEncoder[leftDrive]);
+	if(currentPosition < ticsToCenter)
+		moveForwardInchesNoReset(30,6.75);
+	else
+			moveForwardInchesNoReset(30,3.75);
 	//}
 
 	servo[dumper] = 30;//dumps the block

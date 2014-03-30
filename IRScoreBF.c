@@ -38,6 +38,7 @@ void initializeRobot(){
 	return;
 }
 
+
 task main()
 {
 	int timeToWait = requestTimeToWait();
@@ -56,23 +57,26 @@ task main()
 
 	clearEncoders();
 	wait1Msec(50);
-	const int totalTics = 7583;//total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 6668;//total tics from before IR to end-- DONT CHANGE!
 	const int ticsToCenter = 3696;//tics from start to central beam
-	const int ticsToSubtract = 1665;//failsafe, may still need testing
+	const int ticsToSubtract = 666;//failsafe, may still need testing
 
 	//finding IR
-		while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
-		nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
-		startBackward(27);
+	while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
+		//nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
+		startBackward(30);//notice: this is still slower than IRScoreO, which goes at 27 speed... investigate.
 	}
 	stopDrive();
 	wait1Msec(300);
 	while(HTIRS2readACDir(IR) != 5 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //slow down to look for basket (fine)
+		//nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
 		startForward(15);
 	}
+	stopDrive();
+	//wait1Msec(30000);
 	int currentPosition = abs(nMotorEncoder[leftDrive]);
 	if (currentPosition > ticsToCenter)//check where we are
-		moveForwardInchesNoReset(20, 7);//move forwards 5 inches (buckets 1 and 2)
+		moveForwardInchesNoReset(20, 6);//move forwards 5 inches (buckets 1 and 2)
 	else
 		moveForwardInchesNoReset(20, 3);//forwards 3 inches (buckets 3 and 4)
 
@@ -90,7 +94,7 @@ task main()
 	moveBackwardInches(90, 38, false, LEFTENCODER); //forwards to ramp
 	turn(g_PidTurn, -95, 90); //turn to face ramp
 	moveBackwardInches(90, 40, false, LEFTENCODER);//onto ramp
-  motor[lift]= -50;//starts the lift down
+	motor[lift]= -50;//starts the lift down
 	wait1Msec(500);
 	motor[lift]= 0;//stops lift
 	while(true){}

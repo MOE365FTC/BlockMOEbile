@@ -56,21 +56,26 @@ task main()
 
 	clearEncoders();
 	wait1Msec(50);
-	const int totalTics = 7600;//total tics from before IR to end-- DONT CHANGE!
+	const int totalTics = 6890;//total tics from before IR to end-- DONT CHANGE!
+	const int ticsToCenter = 3696;//tics from start to central beam
+	const int ticsToSubtract = 888;//failsafe, may still need testing
 
-	while(HTIRS2readACDir(IR) > 6){ //finds the beacon
-		nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
-
-		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
-		//if(abs(nMotorEncoder[leftDrive]) >= totalTics-500) break;
-		startBackward(35);
+	//finding IR
+	while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
+		startBackward(30);//notice: this is still slower than IRScoreO, which goes at 27 speed... investigate.
 	}
 	stopDrive();
 	wait1Msec(300);
-	while(HTIRS2readACDir (IR)!= 5){
-		startBackward(15);
+	while(HTIRS2readACDir(IR) != 5 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //slow down to look for basket (fine)
+		startForward(15);
 	}
-	moveBackwardInchesNoReset(30, 8.75);//reverse back a small amount to correct for IR inaccuracy
+	stopDrive();
+	//wait1Msec(30000);
+	int currentPosition = abs(nMotorEncoder[leftDrive]);
+	if (currentPosition > ticsToCenter)//check where we are
+		moveForwardInchesNoReset(20, 6);//move forwards 5 inches (buckets 1 and 2)
+	else
+		moveForwardInchesNoReset(20, 3);//forwards 3 inches (buckets 3 and 4)
 
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
@@ -82,11 +87,11 @@ task main()
 	nxtDisplayCenteredTextLine(0,"TTM: %d", ticsToMove);
 	//while(true){}
 	moveBackwardTics(90, ticsToMove); //move to end after IR
-	turn(g_PidTurn, -85,60); //turn to go towards ramp
+	turn(g_PidTurn, -85,30); //turn to go towards ramp
 	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
-	turn(g_PidTurn, 95, 60); //turn to face ramp
-	moveForwardInches(90, 45, false, LEFTENCODER);//onto ramp
-    motor[lift]= -50;//starts the lift down
+	turn(g_PidTurn, 95, 40); //turn to face ramp
+	moveForwardInches(95, 45, false, LEFTENCODER);//onto ramp
+	motor[lift]= -50;//starts the lift down
 	wait1Msec(500);
 	motor[lift]= 0;//stops lift
 
