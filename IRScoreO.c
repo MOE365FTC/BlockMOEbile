@@ -41,56 +41,52 @@ void initializeRobot(){
 
 task main()
 {
+	int timeToWait = requestTimeToWait();
 	initializeRobot();
 	waitForStart();
-
+	disableDiagnosticsDisplay();
 	//Initialize the gyro and turning
 	GyroInit(g_Gyro, gyro, 0);
 	PidTurnInit(g_PidTurn, leftDrive, rightDrive, MIN_TURN_POWER, g_Gyro, TURN_KP, TURN_TOLERANCE);
-	moveForwardInches(60,50);
-	//moveForwardInches(60,43);//initial forwards
-	turn(g_PidTurn,46);
+	countdown(timeToWait);
 
-	//Execute IRScoreB with reduced totalTics
+	//Start actual movement code
+	moveForwardInches(60,43);//initial forwards
+	turn(g_PidTurn,45,20);
+
 	clearEncoders();
 	wait1Msec(50);
-	const int totalTics = 6800;//total tics from before IR to end-- DONT CHANGE!
-	clearEncoders();
-	while(HTIRS2readACDir(IR) > 6){ //finds the beacon
-		nxtDisplayCenteredTextLine(1,"Direction: %d", HTIRS2readACDir(IR));
+	const int totalTics = 6806;//total tics from before IR to end- CHANGED FOR LESSENED AMOUNT OF FORWARDS
+	const int ticsToCenter = 3663;//tics from start to central beam
+	const int ticsToSubtract = 1665;//failsafe, may still need testing
 
-		nxtDisplayCenteredTextLine(6,"%d",nMotorEncoder[leftDrive]);
-		//if(abs(nMotorEncoder[leftDrive]) >= totalTics-500) break;
-		startBackward(35);
+	//finding IR
+	while(HTIRS2readACDir(IR) != 4 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //finds the beacon zone 4 (rough)
+		//nxtDisplayCenteredTextLine(5,"Direction:%d",HTIRS2readACDir(IR));
+		startBackward(27);
 	}
 	stopDrive();
 	wait1Msec(300);
-	while(HTIRS2readACDir (IR)!= 5){
-		startBackward(15);
+	while(HTIRS2readACDir(IR) != 5 && (abs(nMotorEncoder[leftDrive]) < totalTics - ticsToSubtract)){ //slow down to look for basket (fine)
+		startForward(15);
 	}
-	return;
-	wait1MSec(4000);
-	if(abs(nMotorEncoder[leftDrive]) < 111){//bucket 4
-		wait1MSec(2000);
-		moveBackwardInchesNoReset(30, 0);//reverse back a small amount to correct for IR inaccuracy
- 	}
- 	else{
- 		moveBackwardInchesNoReset(30, 5);//bucket 3
- 	}
+	int currentPosition = abs(nMotorEncoder[leftDrive]);
+	if (currentPosition > ticsToCenter)//check where we are
+		moveForwardInchesNoReset(20, 6);//move forwards 5 inches (buckets 1 and 2)
+	else
+		moveForwardInchesNoReset(20, 3);//forwards 3 inches (buckets 3 and 4)
 	stopDrive();//stops robot
 	servo[dumper] = 30;//dumps the block
 	motor[lift]= 50;//starts the lift up
 	wait1Msec(700);
 	motor[lift]= 0;//stops lift
 	servo[dumper] = servoRestPosition;//resets servo
-	return;
 	int ticsToMove= totalTics - abs(nMotorEncoder[leftDrive]);//tics left after IR
 	nxtDisplayCenteredTextLine(0,"TTM: %d", ticsToMove);
-	//while(true){}
 	moveBackwardTics(90, ticsToMove); //move to end after IR
-	turn(g_PidTurn, -85,60); //turn to go towards ramp
+	turn(g_PidTurn, -87,40); //turn to go towards ramp
 	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
-	turn(g_PidTurn, 95, 60); //turn to face ramp
+	turn(g_PidTurn, 95, 40); //turn to face ramp
 	moveForwardInches(90, 45, false, LEFTENCODER);//onto ramp
 	motor[lift]= -50;//starts the lift down
 	wait1Msec(500);
