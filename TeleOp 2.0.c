@@ -148,7 +148,7 @@ task main()
 				if((abs(nMotorEncoder[arm]) >= 9000) && joystick.joy2_y1 > 0)
 						motor[arm] = 0;
 				else
-					motor[arm] = joystick.joy2_y1*75/abs(joystick.joy2_y1);
+					motor[arm] = joystick.joy2_y1*100/abs(joystick.joy2_y1);
 			}
 		}
 		else{
