@@ -82,7 +82,7 @@ task main()
 	motor[lift]= 0;//stops lift
 	servo[dumper] = servoRestPosition;//resets servo
 	int ticsToMove= totalTics - abs(nMotorEncoder[leftDrive]);//tics left after IR
-	nxtDisplayCenteredTextLine(0,"TTM: %d", ticsToMove);
+	displayCenteredTextLine(0,"TTM: %d", ticsToMove);
 	moveBackwardTics(90, ticsToMove); //move to end after IR
 	turn(g_PidTurn, -87,40); //turn to go towards ramp
 	moveForwardInches(90, 44, false, LEFTENCODER); //forwards to ramp
